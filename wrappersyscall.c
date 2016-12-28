@@ -3,3 +3,8 @@
 //
 
 #include "wrappersyscall.h"
+#include <sys/stat.h>
+
+pid_t forkw(){
+    return fork();
+}

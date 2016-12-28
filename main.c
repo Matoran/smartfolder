@@ -1,15 +1,17 @@
 #include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <dirent.h>
 #include <string.h>
+#include <errno.h>
+#include "logger.h"
+#include "parser.h"
+#include "wrappersyscall.h"
+#include "crawler.h"
 
 /**
  *
  * @param directory
  * @param result
  */
-void search(char *directory, char *result){
+/*void search(char *directory, char *result){
 
     printf("répertoire actuel %s\n", get_current_dir_name());
     chdir(directory);
@@ -54,7 +56,7 @@ void search(char *directory, char *result){
     }
 
     closedir(handle);
-}
+}*/
 
 /**
  *
@@ -63,7 +65,20 @@ void search(char *directory, char *result){
  * @return
  */
 int main(int argc, char *argv[]){
-    printf("%d unknow\n", DT_UNKNOWN);
+    log("démarrage");
+    parser(argc, argv);
+    pid_t value = forkw();
+
+    //child
+    if(value == 0){
+        crawler_launcher(argv[2]);
+    //error
+    }else if(value < 0){
+        log("error fork");
+        log(strerror(errno));
+        return 1;
+    }
+    /*printf("%d unknow\n", DT_UNKNOWN);
     printf("%d fifo\n", DT_FIFO);
     printf("%d chr\n", DT_CHR);
     printf("%d dir\n", DT_DIR);
@@ -71,12 +86,13 @@ int main(int argc, char *argv[]){
     printf("%d reg\n", DT_REG);
     printf("%d lnk\n", DT_LNK);
     printf("%d sock\n", DT_SOCK);
+    crawler_create();
 
 
     char *directory = "/home/cyril.iseli/test";
     char *result = "/home/cyril.iseli/result/";
     chdir(directory);
     //symlink("/home/cyril.iseli/bernstein.m", "/home/cyril.iseli/result/bernstein.m");
-    search(directory, result);
+    search(directory, result);*/
     return EXIT_SUCCESS;
 }
