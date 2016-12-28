@@ -66,18 +66,19 @@
  */
 int main(int argc, char *argv[]){
     log("démarrage");
-    parser(argc, argv);
-    pid_t value = forkw();
+    //parser(argc, argv);
+    //pid_t value = forkw();
 
+    crawler_launcher(argv[2]);
     //child
-    if(value == 0){
-        crawler_launcher(argv[2]);
+    //if(value == 0){
+
     //error
-    }else if(value < 0){
-        log("error fork");
-        log(strerror(errno));
-        return 1;
-    }
+    //}else if(value < 0){
+    //    log("error fork");
+    //    log(strerror(errno));
+    //    return 1;
+    //}
     /*printf("%d unknow\n", DT_UNKNOWN);
     printf("%d fifo\n", DT_FIFO);
     printf("%d chr\n", DT_CHR);
