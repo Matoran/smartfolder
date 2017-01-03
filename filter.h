@@ -4,6 +4,9 @@
 
 #ifndef SEARCHFOLDER_FILTER_H
 #define SEARCHFOLDER_FILTER_H
+#define PLUS 0
+#define MINUS 1
+#define EQUAL 2
 
 #include <time.h>
 #include "circ_list.h"
@@ -37,24 +40,11 @@ typedef struct permS{
 }permS;
 
 typedef struct nameS{
-    int type; //0 => nom exact, 1 => nom partiel
+    bool exactName;
     char *string;
-};
+}nameS;
 
-typedef struct filterS{
-    int nameNb;
-    int sizeNb;
-    int dateNb;
-    int ownerNb;
-    int permNb;
-    circListS *names;
-    circListS *sizes;
-    circListS *dates;
-    circListS *owners;
-    circListS *perms;
-}filterS;
-
-filterS filterConditions;
+circListS *filterConditions;
 
 void initFilter();
 #endif //SEARCHFOLDER_FILTER_H

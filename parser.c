@@ -48,24 +48,46 @@ int conditionType(const char *string){
     return -1;
 }
 
-void parseName(){
+void* parseName(){
+    nameS *name = malloc(sizeof(nameS));
+    char* token = strtok(NULL, " ");
+    name->exactName = token[0] != '"';
+    name->string = token;
+    return name;
+}
+
+void* parseSize(){
+    sizeS *size = malloc(sizeof(sizeS));
+    char* token = strtok(NULL, " ");
+    if(strcmp(token, "+") == 0){
+        size->symbol = PLUS;
+    }else if(strcmp(token, "-") == 0){
+        size->symbol = MINUS;
+    }else if(strcmp(token, "=") == 0){
+        size->symbol = EQUAL;
+    }else{
+        size->symbol = EQUAL;
+    }
+    return size;
 
 }
 
-void parseSize(){
+void* parseDate(){
+    dateS *date = malloc(sizeof(dateS));
 
+    return date;
 }
 
-void parseDate(){
+void* parseOwner(){
+    ownerS *owner = malloc(sizeof(ownerS));
 
+    return owner;
 }
 
-void parseOwner(){
+void* parsePerm(){
+    permS *perm = malloc(sizeof(permS));
 
-}
-
-void parsePerm(){
-
+    return perm;
 }
 
 void parser(int argc, char *argv[]) {
@@ -121,7 +143,7 @@ void parser(int argc, char *argv[]) {
     printf("count: %d\n", count);
 
 
-    filterS *dataFilter = malloc(sizeof(filterS)*count);
+
     char* token = strtok(expression, " ");
     bool condition = false;
     int i = 0;
@@ -132,19 +154,19 @@ void parser(int argc, char *argv[]) {
             int type = conditionType(token);
             switch (type){
                 case NAMES:
-                    parseName();
+                    list_insert_after(filterConditions, parseName());
                     break;
                 case SIZES:
-                    parseSize();
+                    list_insert_after(filterConditions, parseSize());
                     break;
                 case DATES:
-                    parseDate();
+                    list_insert_after(filterConditions, parseDate());
                     break;
                 case OWNERS:
-                    parseOwner();
+                    list_insert_after(filterConditions, parseOwner());
                     break;
                 case PERMS:
-                    parsePerm();
+                    list_insert_after(filterConditions, parseOwner());
                     break;
                 default:
                     log("error unknown condition");
@@ -152,11 +174,7 @@ void parser(int argc, char *argv[]) {
         }else{
             printf("error unknown condition");
         }
-
-        while(condition){
-            token = strtok(NULL, " ");
-        }
-
+        token = strtok(NULL, " ");
     }
 
     debug("parser end");
