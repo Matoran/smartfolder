@@ -5,6 +5,8 @@
 #include "parser.h"
 #include "wrappersyscall.h"
 #include "crawler.h"
+#include "stack.h"
+#include <stdio.h>
 
 /**
  *
@@ -66,10 +68,9 @@
  */
 int main(int argc, char *argv[]){
     log("démarrage");
-    //parser(argc, argv);
+    parser(argc, argv);
     //pid_t value = forkw();
-
-    crawler_launcher(argv[2]);
+    //crawler_launcher(argv[2]);
     //child
     //if(value == 0){
 
