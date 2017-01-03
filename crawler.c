@@ -33,7 +33,7 @@ FTW_SLN fpath  is a symbolic link pointing to a nonexistent file.  (This occurs 
 
 
 static int display_info(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf) {
-    printf("%-3s %2d %7jd   %-40s %d %s\n",
+    printf("%-3s %7jd   %-40s %s\n",
            (tflag == FTW_D) ? "d" :
            (tflag == FTW_DNR) ? "dnr" :
            (tflag == FTW_DP) ? "dp" :
@@ -42,10 +42,10 @@ static int display_info(const char *fpath, const struct stat *sb, int tflag, str
            (tflag == FTW_SL) ? "sl" :
            (tflag == FTW_SLN) ? "sln" :
            "???",
-           ftwbuf->level,
+           //ftwbuf->level,
            (intmax_t) sb->st_size,
            fpath,
-           ftwbuf->base,
+           //ftwbuf->base,
            fpath + ftwbuf->base);
     struct stat bufstat;
     if(stat(fpath, &bufstat) < 0){
@@ -76,7 +76,7 @@ static int display_info(const char *fpath, const struct stat *sb, int tflag, str
     struct group  *gr = getgrgid(bufstat.st_gid);
     //printf("%d",bufstat.st_uid);
     if(pw != 0)
-        printf("user %s", pw->pw_name);
+        printf("user %s\n", pw->pw_name);
     if(gr != 0)
         printf("groupe %s", gr->gr_name);
 
