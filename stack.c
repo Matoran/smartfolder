@@ -18,7 +18,7 @@ void push(stackS **stack, void *value){
 }
 void *pop(stackS **stack){
     if(isEmpty(*stack)){
-        log("stack error: empty stack and pop");
+        logFile("stack error: empty stack and pop");
     }else{
         void *nb = (*stack)->value;
         stackS *temp = *stack;

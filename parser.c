@@ -169,7 +169,7 @@ void parser(int argc, char *argv[]) {
                     list_insert_after(filterConditions, parseOwner());
                     break;
                 default:
-                    log("error unknown condition");
+                    logFile("error unknown condition");
             }
         }else{
             printf("error unknown condition");

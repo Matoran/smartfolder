@@ -47,4 +47,6 @@ typedef struct nameS{
 circListS *filterConditions;
 
 void initFilter();
+void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf);
+
 #endif //SEARCHFOLDER_FILTER_H

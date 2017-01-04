@@ -9,12 +9,12 @@
 void writeInFile(const char *filename, const char *message){
     FILE *fp;
     fp = fopen(filename, "a");
-    fprintf(fp, message);
+    fprintf(fp, "%s", message);
     fprintf(fp, "\n");
     fclose(fp);
 }
 
-void log(const char *message){
+void logFile(const char *message){
     writeInFile("log.txt", message);
 }
 

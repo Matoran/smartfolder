@@ -12,6 +12,7 @@
 #include <grp.h>
 #include "crawler.h"
 #include "logger.h"
+#include "filter.h"
 
 
 /*
@@ -33,66 +34,16 @@ FTW_SLN fpath  is a symbolic link pointing to a nonexistent file.  (This occurs 
 
 
 static int display_info(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf) {
-    printf("%-3s %7jd   %-40s %s\n",
-           (tflag == FTW_D) ? "d" :
-           (tflag == FTW_DNR) ? "dnr" :
-           (tflag == FTW_DP) ? "dp" :
-           (tflag == FTW_F) ? "f" :
-           (tflag == FTW_NS) ? "ns" :
-           (tflag == FTW_SL) ? "sl" :
-           (tflag == FTW_SLN) ? "sln" :
-           "???",
-           //ftwbuf->level,
-           (intmax_t) sb->st_size,
-           fpath,
-           //ftwbuf->base,
-           fpath + ftwbuf->base);
-    struct stat bufstat;
-    if(stat(fpath, &bufstat) < 0){
-        log("error stat file");
-        return 1;
+    //is a file
+    if(tflag == FTW_F){
+        filter(fpath, sb, tflag, ftwbuf);
     }
-
-
-    //printf("File Size: \t\t%d bytes\n",bufstat.st_size);
-    //printf("Number of Links: \t%d\n",bufstat.st_nlink);
-    //printf("File inode: \t\t%d\n",bufstat.st_ino);
-    char buff[20];
-    strftime(buff, 20, "%Y-%m-%d %H:%M:%S", localtime(&bufstat.st_atime));
-    printf(buff);
-    printf("\nFile Permissions: \t");
-    //printf( (S_ISDIR(bufstat.st_mode)) ? "d" : "-");
-    printf( (bufstat.st_mode & S_IRUSR) ? "r" : "-");
-    printf( (bufstat.st_mode & S_IWUSR) ? "w" : "-");
-    printf( (bufstat.st_mode & S_IXUSR) ? "x" : "-");
-    printf( (bufstat.st_mode & S_IRGRP) ? "r" : "-");
-    printf( (bufstat.st_mode & S_IWGRP) ? "w" : "-");
-    printf( (bufstat.st_mode & S_IXGRP) ? "x" : "-");
-    printf( (bufstat.st_mode & S_IROTH) ? "r" : "-");
-    printf( (bufstat.st_mode & S_IWOTH) ? "w" : "-");
-    printf( (bufstat.st_mode & S_IXOTH) ? "x" : "-");
-    printf("\n");
-    struct passwd *pw = getpwuid(bufstat.st_uid);
-    struct group  *gr = getgrgid(bufstat.st_gid);
-    //printf("%d",bufstat.st_uid);
-    if(pw != 0)
-        printf("user %s\n", pw->pw_name);
-    if(gr != 0)
-        printf("groupe %s", gr->gr_name);
-
-    printf("\n\n");
-
-
-
-    //printf("The file %s a symbolic link\n", (S_ISLNK(bufstat.st_mode)) ? "is" : "is not");
-
-
     return 0;           /* To tell nftw() to continue */
 }
 
 void crawler_launcher(const char *path) {
     if (nftw(path, display_info, 20, 0) == -1) {
-        perror("nftw");
+        logFile("nftw error");
         exit(EXIT_FAILURE);
     }
     exit(EXIT_SUCCESS);
