@@ -6,5 +6,5 @@
 #define SEARCHFOLDER_LINKER_H
 
 char* linker_destination;
-
+void zelda(const char *linkSource, const char *filename);
 #endif //SEARCHFOLDER_LINKER_H

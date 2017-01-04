@@ -15,6 +15,7 @@
 #include "logger.h"
 #include "parser.h"
 #include "stack.h"
+#include "linker.h"
 
 bool checkName(int pos, const char *fpath){
     nameS *condition = ((nameS*)filterConditions[pos]);
@@ -105,7 +106,6 @@ void initFilter(){
 }
 
 void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf){
-    bool valid = true;
     stackBoolS *stack;
     createStackBool(&stack);
 
@@ -151,8 +151,11 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
         displayStackBool(stack);
         printf("\n");
     }
-    printf("valid: %d", popBool(&stack));
+    //printf("valid: %d", popBool(&stack));
     //size, path, filename
+    if(popBool(&stack)){
+        zelda(fpath, fpath + ftwbuf->base);
+    }
     printf("\nfilename \t%s\n",  fpath + ftwbuf->base);
     printf("path \t%s\n", fpath);
     printf("size \t%7jd\n", (intmax_t) sb->st_size);

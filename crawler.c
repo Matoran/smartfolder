@@ -3,8 +3,8 @@
 //
 
 #define _XOPEN_SOURCE 500
-#include <stdlib.h>
 #include <ftw.h>
+#include <stdlib.h>
 #include "crawler.h"
 #include "logger.h"
 #include "filter.h"
