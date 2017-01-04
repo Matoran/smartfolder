@@ -12,7 +12,7 @@
 # Linker output
 *.ilk
 *.map
-*.exp
+*.expressionFilter
 
 # Precompiled Headers
 *.gch

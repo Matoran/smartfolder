@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE 500
+
 //
 // Created by matoran on 12/16/16.
 //
@@ -13,6 +15,8 @@
 #define USER 0
 #define GROUP 1
 
+#include <ftw.h>
+#include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
 
@@ -49,7 +53,7 @@ typedef struct nameS{
 }nameS;
 
 void **filterConditions;
-int *exp;
+int *expressionFilter;
 int size;
 
 void initFilter();

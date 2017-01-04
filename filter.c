@@ -112,10 +112,10 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
     int j = 0;
     printf("\n");
     for (int k = 0; k < size; ++k) {
-        printf("%d ", exp[k]);
+        printf("%d ", expressionFilter[k]);
     }
     for (int i = 0; i < size; ++i) {
-        switch (exp[i]){
+        switch (expressionFilter[i]){
             case NOT:
                 pushBool(&stack, !popBool(&stack));
                 break;
@@ -153,7 +153,7 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
     }
     //printf("valid: %d", popBool(&stack));
     //size, path, filename
-    if(popBool(&stack)){
+    if(size == 0 || popBool(&stack)){
         zelda(fpath, fpath + ftwbuf->base);
     }
     printf("\nfilename \t%s\n",  fpath + ftwbuf->base);

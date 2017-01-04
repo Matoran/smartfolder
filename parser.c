@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <pwd.h>
 #include <grp.h>
+#include <errno.h>
 #include "parser.h"
 #include "linker.h"
 #include "filter.h"
@@ -179,14 +180,20 @@ void parser(int argc, char *argv[]) {
     if (argc < 2) {
         printf("usage: ./smartfolder destination source");
     }
+    if(mkdir(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1){
+        if(errno != EEXIST){
+            logFile("parser error creation directory");
+        }
+    }
     if (isDirectory(argv[1])) {
         linker_destination = argv[1];
     } else {
+
         printf("error: destination is not a directory\n");
     }
 
     if (isDirectory(argv[2])) {
-        linker_destination = argv[2];
+        //linker_destination = argv[2];
     } else {
         printf("error: source is not a directory\n");
     }
@@ -235,7 +242,7 @@ void parser(int argc, char *argv[]) {
     printf("count condition : %d\n", countConditions);
     printf("count total : %d\n", countTotal);
     filterConditions = malloc(sizeof(void*)*countConditions);
-    exp = malloc(sizeof(int)*countTotal);
+    expressionFilter = malloc(sizeof(int)*countTotal);
     //now expression is post fixed
     char *token = strtok(expression, " ");
     int i = 0;
@@ -265,10 +272,10 @@ void parser(int argc, char *argv[]) {
                 default:
                     logFile("error unknown condition");
             }
-            exp[j] = type;
+            expressionFilter[j] = type;
             i++;
         } else {
-            exp[j] = atoi(token);
+            expressionFilter[j] = atoi(token);
             printf("OR AND NOT\n");
         }
         token = strtok(NULL, " ");
@@ -276,7 +283,7 @@ void parser(int argc, char *argv[]) {
     }
 
     for (int k = 0; k < countTotal; ++k) {
-        printf("%d ", exp[k]);
+        printf("%d ", expressionFilter[k]);
     }
     size = countTotal;
 
