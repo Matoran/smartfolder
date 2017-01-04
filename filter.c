@@ -10,39 +10,152 @@
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
+#include <memory.h>
 #include "filter.h"
 #include "logger.h"
+#include "parser.h"
+#include "stack.h"
+
+bool checkName(int pos, const char *fpath){
+    nameS *condition = ((nameS*)filterConditions[pos]);
+    printf("%s %s\n", condition->string, fpath);
+    return strcmp(condition->string, fpath) == 0;
+}
+
+bool checkSize(int pos, off_t size){
+    sizeS *condition = ((sizeS*)filterConditions[pos]);
+    switch (condition->symbol){
+        case PLUS:
+            return size > condition->number;
+        case MINUS:
+            return size < condition->number;
+        case EQUAL:
+            return size == condition->number;
+        default:
+            logFile("checkSize error condition symbol unknow");
+            exit(1);
+    }
+}
+
+
+bool checkDate(int pos, const struct stat *sb){
+    dateS *condition = ((dateS*)filterConditions[pos]);
+    time_t time;
+    time_t timeCondition = mktime(&condition->date);
+
+    switch (condition->type){
+        case STATUS:
+            time = sb->st_ctime;
+            break;
+        case ACCESSED:
+            time = sb->st_atime;
+            break;
+        case MODIFIED:
+            time = sb->st_mtime;
+            break;
+        default:
+            logFile("checkDate error condition type unknow");
+            exit(1);
+    }
+
+    switch (condition->symbol){
+        case PLUS:
+            return time > timeCondition;
+        case MINUS:
+            return time < timeCondition;
+        case EQUAL:
+            return time == timeCondition;
+        default:
+            logFile("checkDate error condition symbol unknow");
+            exit(1);
+    }
+}
+
+bool checkOwner(int pos, const struct stat *sb){
+    ownerS *condition = ((ownerS*)filterConditions[pos]);
+    switch (condition->type){
+        case GROUP:
+            return condition->number == sb->st_gid;
+        case USER:
+            return condition->number == sb->st_uid;
+        default:
+            logFile("checkOwner error condition type unknow");
+            exit(1);
+    }
+}
+
+bool checkPerm(int pos, const struct stat *sb){
+    permS *condition = ((permS*)filterConditions[pos]);
+    int perms = sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
+    switch (condition->symbol){
+        case PLUS:
+            return perms > condition->number;
+        case MINUS:
+            return perms < condition->number;
+        case EQUAL:
+            return perms == condition->number;
+        default:
+            logFile("checkPerm error condition symbol unknow");
+            exit(1);
+    }
+}
 
 void initFilter(){
     filterConditions = NULL;
 }
 
 void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf){
+    bool valid = true;
+    stackBoolS *stack;
+    createStackBool(&stack);
+
+    int j = 0;
+    printf("\n");
+    for (int k = 0; k < size; ++k) {
+        printf("%d ", exp[k]);
+    }
+    for (int i = 0; i < size; ++i) {
+        switch (exp[i]){
+            case NOT:
+                pushBool(&stack, !popBool(&stack));
+                break;
+            case OR:
+                pushBool(&stack, popBool(&stack) | popBool(&stack));
+                break;
+            case AND:
+                pushBool(&stack, popBool(&stack) & popBool(&stack));
+                break;
+            case NAMES:
+                pushBool(&stack, checkName(j, fpath + ftwbuf->base));
+                j++;
+                break;
+            case SIZES:
+                pushBool(&stack, checkSize(j, sb->st_size));
+                j++;
+                break;
+            case DATES:
+                pushBool(&stack, checkDate(j, sb));
+                j++;
+                break;
+            case OWNERS:
+                pushBool(&stack, checkOwner(j, sb));
+                j++;
+                break;
+            case PERMS:
+                pushBool(&stack, checkPerm(j, sb));
+                j++;
+                break;
+            default:
+                logFile("error in filter, unknow expression type");
+        }
+        displayStackBool(stack);
+        printf("\n");
+    }
+    printf("valid: %d", popBool(&stack));
     //size, path, filename
     printf("\nfilename \t%s\n",  fpath + ftwbuf->base);
     printf("path \t%s\n", fpath);
     printf("size \t%7jd\n", (intmax_t) sb->st_size);
-
-
-
-    /*printf("%-3s %7jd   %-40s %s\n",
-           (tflag == FTW_D) ? "d" :
-           (tflag == FTW_DNR) ? "dnr" :
-           (tflag == FTW_DP) ? "dp" :
-           (tflag == FTW_F) ? "f" :
-           (tflag == FTW_NS) ? "ns" :
-           (tflag == FTW_SL) ? "sl" :
-           (tflag == FTW_SLN) ? "sln" :
-           "???",
-           //ftwbuf->level,
-           (intmax_t) sb->st_size,
-           fpath,
-           //ftwbuf->base,
-           fpath + ftwbuf->base);*/
-    //printf("File Size: \t\t%d bytes\n",bufstat.st_size);
-    //printf("Number of Links: \t%d\n",bufstat.st_nlink);
-    //printf("File inode: \t\t%d\n",bufstat.st_ino);
-
 
     //Time
     struct stat bufstat;
@@ -56,6 +169,7 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
 
     //File Permissions
     printf("file Permissions \t");
+    printf("%o\n", sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO));
     //printf( (S_ISDIR(bufstat.st_mode)) ? "d" : "-");
     printf( (bufstat.st_mode & S_IRUSR) ? "r" : "-");
     printf( (bufstat.st_mode & S_IWUSR) ? "w" : "-");
@@ -83,6 +197,4 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
     printf("\n\n");
 
 
-
-    //printf("The file %s a symbolic link\n", (S_ISLNK(bufstat.st_mode)) ? "is" : "is not");
 }

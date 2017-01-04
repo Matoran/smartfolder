@@ -7,9 +7,14 @@
 #define PLUS 0
 #define MINUS 1
 #define EQUAL 2
+#define STATUS 0
+#define ACCESSED 1
+#define MODIFIED 2
+#define USER 0
+#define GROUP 1
 
 #include <time.h>
-#include "circ_list.h"
+#include <stdbool.h>
 
 typedef struct dataFilterS{
     int type;
@@ -19,8 +24,7 @@ typedef struct dataFilterS{
 
 typedef struct sizeS{
     int symbol;
-    int number;
-    int unit;
+    long long number;
 }sizeS;
 
 typedef struct dateS{
@@ -44,7 +48,9 @@ typedef struct nameS{
     char *string;
 }nameS;
 
-circListS *filterConditions;
+void **filterConditions;
+int *exp;
+int size;
 
 void initFilter();
 void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf);
