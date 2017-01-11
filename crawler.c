@@ -41,5 +41,4 @@ void crawler_launcher(const char *path) {
         logFile("nftw error");
         exit(EXIT_FAILURE);
     }
-    exit(EXIT_SUCCESS);
 }

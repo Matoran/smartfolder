@@ -1,6 +1,8 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
 #include "logger.h"
 #include "parser.h"
 #include "wrappersyscall.h"
@@ -65,20 +67,45 @@
  * @return
  */
 int main(int argc, char *argv[]){
-    logFile("démarrage");
-    parser(argc, argv);
-    crawler_launcher(argv[2]);
-    //pid_t value = forkw();
+    if(strcmp(argv[1], "-d") == 0){
+        if(argc != 3){
+            printf("usage: ./smartfolder -d dir_name\n");
+            exit(2);
+        }
+        logFile("kill smartfolder with name");
+        logFile(argv[2]);
+        pid_t pid = readPID(argv[2]);
+        //read file
+        if(kill(pid, SIGKILL) == 0){
+            printf("killed\n");
+        }else{
+            perror("kill");
+        }
+    }else{
+        parser(argc, argv);
 
-    //child
-    /*if(value == 0){
+        pid_t value = forkw();
+        printf("\n%ld %s\n", (long)value, argv[1]);
+        //child
+        if(value == 0){
+            //redirige stdout vers un fichier
+            FILE *out;
+            out = fopen("out.txt", "a");
+            dup2(fileno(out), STDOUT_FILENO);
+            debug("child started");
+            crawler_launcher(argv[2]);
+            while(1){}
+            debug("child ended");
+            //error
+        }else if(value < 0){
+            logFile("error fork");
+            logFile(strerror(errno));
+            return 1;
+        }else{
+            savePID(argv[1], value);
+        }
+    }
 
-    //error
-    }else if(value < 0){
-        logFile("error fork");
-        logFile(strerror(errno));
-        return 1;
-    }*/
     /*printf("%d unknow\n", DT_UNKNOWN);
     printf("%d fifo\n", DT_FIFO);
     printf("%d chr\n", DT_CHR);
@@ -95,5 +122,6 @@ int main(int argc, char *argv[]){
     chdir(directory);
     //symlink("/home/cyril.iseli/bernstein.m", "/home/cyril.iseli/result/bernstein.m");
     search(directory, result);*/
+    debug("parent ended");
     return EXIT_SUCCESS;
 }

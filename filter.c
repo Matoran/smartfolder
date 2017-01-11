@@ -19,8 +19,11 @@
 
 bool checkName(int pos, const char *fpath){
     nameS *condition = ((nameS*)filterConditions[pos]);
-    printf("%s %s\n", condition->string, fpath);
-    return strcmp(condition->string, fpath) == 0;
+    if(condition->exactName){
+        return strcmp(condition->string, fpath) == 0;
+    }else{
+        return strstr(fpath, condition->string) != NULL;
+    }
 }
 
 bool checkSize(int pos, off_t size){
