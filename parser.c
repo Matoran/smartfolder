@@ -19,6 +19,8 @@ static int isDirectory(const char *path) {
     struct stat statbuf;
     if (stat(path, &statbuf) != 0)
         return 0;
+
+    printf("mode: %s %d\n", path, statbuf.st_mode);
     return S_ISDIR(statbuf.st_mode);
 }
 
@@ -183,19 +185,18 @@ void parser(int argc, char *argv[]) {
     if(mkdir(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1){
         if(errno != EEXIST){
             logFile("parser error creation directory");
+            perror("mkdir destination");
+            exit(2);
         }
     }
     if (isDirectory(argv[1])) {
         linker_destination = argv[1];
     } else {
-
         printf("error: destination is not a directory\n");
     }
-
-    if (isDirectory(argv[2])) {
-        //linker_destination = argv[2];
-    } else {
-        printf("error: source is not a directory\n");
+    if (isDirectory(argv[2]) == 0) {
+        perror("stat source");
+        exit(2);
     }
     initFilter();
 

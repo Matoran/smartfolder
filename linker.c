@@ -12,6 +12,27 @@
 #include <sys/stat.h>
 #include "linker.h"
 #include "logger.h"
+#include <unistd.h>
+#include <time.h>
+
+/*void link(const char* source, const char* destination){
+    if(symlink(source, destination)){
+        Log("symlink created");
+        Log(source);
+        Log(destination);
+        Log("\n");
+    }else{
+        Log("symlink error");
+        Log(source);
+        Log(destination);
+        Log(time()); //à charger comment récup la date gettimeofday ou
+
+        //case l'erreur de symlink
+        //impossible d'écrire
+        //erreur interne etc
+        Log("\n");
+    }
+}*/
 
 void zelda(const char *linkSource, const char *filename){
 

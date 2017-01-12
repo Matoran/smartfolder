@@ -92,6 +92,7 @@ int main(int argc, char *argv[]){
             FILE *out;
             out = fopen("out.txt", "a");
             dup2(fileno(out), STDOUT_FILENO);
+            printf("coucou\n");
             debug("child started");
             crawler_launcher(argv[2]);
             while(1){}
