@@ -95,13 +95,11 @@ int main(int argc, char *argv[]){
             printf("coucou\n");
             debug("child started");
             crawler_launcher(argv[2]);
-            while(1){}
+            while(1){
+                sleep(1000);
+            }
             debug("child ended");
             //error
-        }else if(value < 0){
-            logFile("error fork");
-            logFile(strerror(errno));
-            return 1;
         }else{
             savePID(argv[1], value);
         }

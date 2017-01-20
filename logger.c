@@ -6,18 +6,25 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <libgen.h>
 #include <asm/errno.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <time.h>
+#include <stdarg.h>
+#include <libgen.h>
 
 
-void writeInFile(const char *filename, const char *message){
-    FILE *fp;
-    fp = fopen(filename, "w");
-    fprintf(fp, "%s", message);
-    fprintf(fp, "\n");
-    fclose(fp);
+void writeInFile(const char *filename, const char *format, ...){
+    va_list args;
+    va_start(args, format);
+    char buff[70];
+    time_t t = time(NULL);
+    strftime(buff, sizeof buff, "%x %T", localtime(&t));
+    fprintf(stderr, "[%s] ", buff);
+    fprintf(stderr, format, args);
+    fprintf(stderr, "\n");
+    va_end(args);
+
 }
 
 void logFile(const char *message){

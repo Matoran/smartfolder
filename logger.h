@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 
-static void writeInFile(const char *filename, const char *message);
+static void writeInFile(const char *filename, const char *format, ...);
 extern void logFile(const char *message);
 extern void debug(const char *message);
 void savePID(const char *name, pid_t pid);
