@@ -37,7 +37,8 @@ static int display_info(const char *fpath, const struct stat *sb, int tflag, str
 }
 
 void crawler_launcher(const char *path) {
-    if (nftw(path, display_info, 20, 0) == -1) {
+    char* realPath = realpath(path, NULL);
+    if (nftw(realPath, display_info, 20, 0) == -1) {
         logFile("nftw error");
         exit(EXIT_FAILURE);
     }

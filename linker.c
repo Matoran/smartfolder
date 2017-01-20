@@ -49,6 +49,8 @@ void zelda(const char *linkSource, const char *filename){
             fclose(file);
             if(isExist(linkSource,linkDestination)){
                 return;
+            }else{
+                printf("WTF %s %s", linkSource, linkDestination);
             }
             i++;
             sprintf(&linkDestination[length], "%d", i);

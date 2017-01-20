@@ -73,7 +73,15 @@ int conditionType(const char *string) {
 void *parseName() {
     nameS *name = malloc(sizeof(nameS));
     char *token = strtok(NULL, " ");
-    name->exactName = token[0] != '"';
+    if (strcmp(token, "-") == 0) {
+        name->exactName = false;
+        token = strtok(NULL, " ");
+    } else if (strcmp(token, "=") == 0) {
+        name->exactName = true;
+        token = strtok(NULL, " ");
+    } else {
+        name->exactName = true;
+    }
     name->string = token;
     return name;
 }

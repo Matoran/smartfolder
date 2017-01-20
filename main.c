@@ -82,17 +82,17 @@ int main(int argc, char *argv[]){
             perror("kill");
         }
     }else{
+        if(argc < 3){
+            printf("usage: ./smartfolder dir_name search_path [expression]\n");
+            exit(2);
+        }
         parser(argc, argv);
+        printf("realpath of %s : %s", argv[1],  realpath(argv[1], NULL));
 
         pid_t value = forkw();
         printf("\n%ld %s\n", (long)value, argv[1]);
         //child
         if(value == 0){
-            //redirige stdout vers un fichier
-            FILE *out;
-            out = fopen("out.txt", "a");
-            dup2(fileno(out), STDOUT_FILENO);
-            printf("coucou\n");
             debug("child started");
             while(1){
                 crawler_launcher(argv[2]);
