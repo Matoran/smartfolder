@@ -14,13 +14,12 @@
 #include "filter.h"
 #include "logger.h"
 #include "stack.h"
+#include "wrappersyscall.h"
 
 static int isDirectory(const char *path) {
     struct stat statbuf;
     if (stat(path, &statbuf) != 0)
         return 0;
-
-    printf("mode: %s %d\n", path, statbuf.st_mode);
     return S_ISDIR(statbuf.st_mode);
 }
 
@@ -37,6 +36,24 @@ int isLogicGate(const char *string) {
         return BRACKET_CLOSE;
 
     return -1;
+}
+
+bool isWriteable(char *fpath){
+    struct stat bufstat;
+    statw(fpath, &bufstat);
+    if(bufstat.st_mode & S_IWUSR){
+        return true;
+    }
+    return false;
+}
+
+bool isReadable(char *fpath){
+    struct stat bufstat;
+    statw(fpath, &bufstat);
+    if(bufstat.st_mode & S_IRUSR){
+        return true;
+    }
+    return false;
 }
 
 int conditionType(const char *string) {
@@ -190,13 +207,24 @@ void parser(int argc, char *argv[]) {
         }
     }
     if (isDirectory(argv[1])) {
-        linker_destination = argv[1];
+        if(isWriteable(argv[1])) {
+            linker_destination = argv[1];
+        }else{
+            logFile("error: no write access");
+            exit(42);
+        }
     } else {
         printf("error: destination is not a directory\n");
     }
-    if (isDirectory(argv[2]) == 0) {
-        perror("stat source");
-        exit(2);
+
+    if (isDirectory(argv[2])) {
+        if(!isReadable(argv[2])){
+            logFile("error: no read access");
+            exit(42);
+        }
+        //linker_destination = argv[2];
+    } else {
+        printf("error: source is not a directory\n");
     }
     initFilter();
 

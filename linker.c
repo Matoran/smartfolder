@@ -34,8 +34,36 @@
     }
 }*/
 
-void zelda(const char *linkSource, const char *filename){
+bool isExist(const char *linkSource, char *linkDestination){
+    struct stat sb;
+    char *linkname;
 
+    if (lstat(linkDestination, &sb) == -1) {
+        perror("lstat");
+        exit(EXIT_FAILURE);
+    }
+
+    linkname = malloc(sb.st_size + 1);
+    if (linkname == NULL) {
+        fprintf(stderr, "insufficient memory\n");
+        exit(EXIT_FAILURE);
+    }
+
+    ssize_t r = readlink(linkDestination, linkname, sb.st_size + 1);
+    if (r == -1) {
+        logFile("error: in readlink");
+        exit(EXIT_FAILURE);
+    }
+    printf("source %s  ", linkSource);
+    printf("link %s\n", linkname);
+    if(strcmp(linkSource,linkname) == 0){
+        return true;
+    }
+
+    return false;
+}
+
+void zelda(const char *linkSource, const char *filename){
     char *linkDestination = malloc(sizeof(char)*(strlen(linker_destination)+strlen(filename)+10));
     strcpy(linkDestination, linker_destination);
     strcat(linkDestination, "/");
@@ -44,11 +72,14 @@ void zelda(const char *linkSource, const char *filename){
     FILE* file = NULL;
     int i = 0;
     bool open = true;
-    int length = strlen(linkDestination);
+    size_t length = strlen(linkDestination);
     do{
         file = fopen(linkDestination, "r+");
         if(file != NULL) {
             fclose(file);
+            if(isExist(linkSource,linkDestination)){
+                return;
+            }
             i++;
             sprintf(&linkDestination[length], "%d", i);
         }else{

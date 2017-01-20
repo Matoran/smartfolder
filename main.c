@@ -94,9 +94,11 @@ int main(int argc, char *argv[]){
             dup2(fileno(out), STDOUT_FILENO);
             printf("coucou\n");
             debug("child started");
-            crawler_launcher(argv[2]);
             while(1){
-                sleep(1000);
+                crawler_launcher(argv[2]);
+                //checkFiles();
+
+                sleep(10);
             }
             debug("child ended");
             //error

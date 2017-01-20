@@ -186,6 +186,8 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
     printf( (bufstat.st_mode & S_IROTH) ? "r" : "-");
     printf( (bufstat.st_mode & S_IWOTH) ? "w" : "-");
     printf( (bufstat.st_mode & S_IXOTH) ? "x" : "-");
+
+
     printf("\n");
 
     //group and user
