@@ -52,10 +52,11 @@ int main(int argc, char *argv[]) {
         printf("\n%ld %s\n", (long) value, argv[1]);
         //child
         if (value == 0) {
-            debug("child started");
+            logger("child started\n", DEBUG, true);
             while (1) {
                 crawler_launcher(argv[2]);
                 //checkFiles();
+                logger("crawler and check files ok\n", DEBUG, true);
                 sleep(10);
             }
         } else {

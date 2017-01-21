@@ -88,8 +88,7 @@ void nftww(const char *dirpath, int (*fn) (const char *fpath, const struct stat 
 void mkdirw(const char *path, mode_t mode){
     if(mkdir(path, mode) == -1){
         if(errno != EEXIST){
-            logFile("parser error creation directory");
-            perror("mkdir destination");
+            perror("mkdir");
             exit(2);
         }
     }

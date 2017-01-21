@@ -295,9 +295,7 @@ void parser(int argc, char *argv[]) {
         length += sprintf(expression + length, "%d ", logicGate);
         countTotal++;
     }
-    printf("expression: %s\n", expression);
-    printf("count condition : %d\n", countConditions);
-    printf("count total : %d\n", countTotal);
+    logger("actual expression %s, count conditions %d, count total %d\n", DEBUG, true, expression, countConditions, countTotal);
     filterConditions = mallocw(sizeof(void*)*countConditions);
     expressionFilter = mallocw(sizeof(int)*countTotal);
     //now expression is post fixed
@@ -305,7 +303,7 @@ void parser(int argc, char *argv[]) {
     int i = 0;
     int j = 0;
     while (token) {
-        printf("token: %s\n", token);
+        logger("token %s\n", DEBUG, true, token);
         if (token[0] == '-') {
             printf("%d\n", conditionType(token));
             int type = conditionType(token);
@@ -326,13 +324,13 @@ void parser(int argc, char *argv[]) {
                     filterConditions[i] =  parsePerm();
                     break;
                 default:
-                    logFile("error unknown condition");
+                    logger("error unknown condition\n", ERROR, true);
             }
             expressionFilter[j] = type;
             i++;
         } else {
             expressionFilter[j] = atoi(token);
-            printf("OR AND NOT\n");
+            logger("token is a logic gate %s\n", DEBUG, true, getLogicGateName(expressionFilter[j]));
         }
         token = strtok(NULL, " ");
         j++;
@@ -342,6 +340,5 @@ void parser(int argc, char *argv[]) {
         printf("%d ", expressionFilter[k]);
     }
     size = countTotal;
-
-    debug("parser end");
+    logger("parser end\n", DEBUG, true);
 }

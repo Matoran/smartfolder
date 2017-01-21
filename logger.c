@@ -3,6 +3,7 @@
 //
 
 #include "logger.h"
+#include "wrappersyscall.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -37,25 +38,12 @@ void logger(const char *format, int type, bool begin, ...){
     }
 }
 
-void logFile(const char *message){
-    writeInFile("log.txt", message);
-}
-
-void debug(const char *message){
-    writeInFile("debug.txt", message);
-}
-
 void savePID(const char *name, pid_t pid){
     char stringPID[12];
 
     char *fullName = malloc(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+1));
     strcpy(fullName, "/tmp/smartfolder/");
-    if(mkdir(fullName, S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1){
-        if(errno != EEXIST){
-            logFile("save pid impossible");
-            exit(2);
-        }
-    }
+    mkdirw(fullName, S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     strcat(fullName, basename(name));
     sprintf(stringPID, "%ld", (long)pid);
     writeInFile(fullName, stringPID);

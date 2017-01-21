@@ -37,7 +37,7 @@ bool checkSize(int pos, off_t size){
         case EQUAL:
             return size == condition->number;
         default:
-            logFile("checkSize error condition symbol unknow");
+            logger("checkSize error condition symbol unknow %d\n", ERROR, true, condition->symbol);
             exit(1);
     }
 }
@@ -59,7 +59,7 @@ bool checkDate(int pos, const struct stat *sb){
             time = sb->st_mtime;
             break;
         default:
-            logFile("checkDate error condition type unknow");
+            logger("checkDate error condition type unknow %d\n", ERROR, true, condition->type);
             exit(1);
     }
 
@@ -71,7 +71,7 @@ bool checkDate(int pos, const struct stat *sb){
         case EQUAL:
             return time == timeCondition;
         default:
-            logFile("checkDate error condition symbol unknow");
+            logger("checkDate error condition symbol unknow %d\n", ERROR, true, condition->symbol);
             exit(1);
     }
 }
@@ -84,7 +84,7 @@ bool checkOwner(int pos, const struct stat *sb){
         case USER:
             return condition->number == sb->st_uid;
         default:
-            logFile("checkOwner error condition type unknow");
+            logger("checkOwner error condition type unknow %d\n", ERROR, true, condition->type);
             exit(1);
     }
 }
@@ -100,7 +100,7 @@ bool checkPerm(int pos, const struct stat *sb){
         case EQUAL:
             return perms == condition->number;
         default:
-            logFile("checkPerm error condition symbol unknow");
+            logger("checkPerm error condition symbol unknow %d\n", ERROR, true, condition->symbol);
             exit(1);
     }
 }
@@ -150,7 +150,7 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
                 j++;
                 break;
             default:
-                logFile("error in filter, unknow expression type");
+                logger("error in filter, unknow expression type %d\n", ERROR, true, expressionFilter[i]);
         }
         displayStackBool(stack);
         printf("\n");

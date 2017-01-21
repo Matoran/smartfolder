@@ -22,7 +22,7 @@ void push(stackS **stack, void *value){
 
 void *pop(stackS **stack){
     if(isEmpty(*stack)){
-        logFile("stack error: empty stack and pop");
+        logger("stack error: empty stack and pop\n", ERROR, true);
     }else{
         void *nb = (*stack)->value;
         stackS *temp = *stack;
@@ -51,7 +51,7 @@ void pushBool(stackBoolS **stack, bool value){
 
 bool popBool(stackBoolS **stack){
     if(isEmptyBool(*stack)){
-        logFile("stack error: empty stack and pop");
+        logger("stack error: empty stack and pop\n", ERROR, true);
     }else{
         bool boolean = (*stack)->value;
         stackBoolS *temp = *stack;
