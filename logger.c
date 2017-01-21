@@ -12,6 +12,7 @@
 #include <time.h>
 #include <stdarg.h>
 #include <libgen.h>
+#include <stdbool.h>
 
 void writeInFile(const char *filename, const char *message){
     FILE *fp;
@@ -21,16 +22,17 @@ void writeInFile(const char *filename, const char *message){
     fclose(fp);
 }
 
-void logger(const char *format, int type, ...){
+void logger(const char *format, int type, bool begin, ...){
     if(LEVEL & type){
         va_list args;
         va_start(args, format);
-        char buff[70];
-        time_t t = time(NULL);
-        strftime(buff, sizeof buff, "%x %T", localtime(&t));
-        fprintf(stderr, "[%s] ", buff);
-        fprintf(stderr, format, args);
-        fprintf(stderr, "\n");
+        if(begin){
+            char buff[70];
+            time_t t = time(NULL);
+            strftime(buff, sizeof buff, "%x %T", localtime(&t));
+            fprintf(stderr, "[%s] ", buff);
+        }
+        vfprintf(stderr, format, args);
         va_end(args);
     }
 }
@@ -72,8 +74,7 @@ pid_t readPID(const char *name){
         remove(fullName);
         return value;
     }else{
-        logFile("error: cannot open filename:");
-        logFile(fullName);
+        logger("cannot open filename: %s, smartfolder %s doesn't exist\n", ERROR, true, fullName, name);
         exit(3);
     }
 }

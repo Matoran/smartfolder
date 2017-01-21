@@ -20,5 +20,6 @@ void unlinkw(const char *pathname);
 void nftww(const char *dirpath, int (*fn) (const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf),
            int nopenfd, int flags);
 void mkdirw(const char *path, mode_t mode);
+void killw(pid_t pid, int sig);
 
 #endif //SEARCHFOLDER_WRAPPERSYSCALL_H

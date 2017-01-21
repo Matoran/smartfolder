@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <ftw.h>
 #include <errno.h>
+#include <signal.h>
 #include "wrappersyscall.h"
 #include "logger.h"
 
@@ -91,5 +92,12 @@ void mkdirw(const char *path, mode_t mode){
             perror("mkdir destination");
             exit(2);
         }
+    }
+}
+
+void killw(pid_t pid, int sig){
+    if(kill(pid, sig) == -1){
+        perror("kill");
+        exit(2);
     }
 }

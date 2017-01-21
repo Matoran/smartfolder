@@ -6,12 +6,15 @@
 #define SEARCHFOLDER_LOGGER_H
 
 #include <stdlib.h>
+#include <stdbool.h>
+
 #define LOG 1
 #define DEBUG 2
-#define LEVEL LOG | DEBUG
+#define ERROR 4
+#define LEVEL LOG | DEBUG | ERROR
 
 static void writeInFile(const char *filename, const char *message);
-extern void logger(const char *format, int type, ...);
+extern void logger(const char *format, int type, bool begin, ...);
 extern void logFile(const char *message);
 extern void debug(const char *message);
 void savePID(const char *name, pid_t pid);

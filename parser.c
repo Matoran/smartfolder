@@ -16,6 +16,23 @@
 #include "stack.h"
 #include "wrappersyscall.h"
 
+char* getLogicGateName(int val){
+    switch (val){
+        case NOT:
+            return "NOT";
+        case OR:
+            return "OR";
+        case AND:
+            return "AND";
+        case BRACKET_OPEN:
+            return "BRACKET OPEN";
+        case BRACKET_CLOSE:
+            return "BRACKET CLOSE";
+        default:
+            return "unknow logic gate";
+    }
+}
+
 static int isDirectory(const char *path) {
     struct stat statbuf;
     statw(path, &statbuf);
@@ -202,34 +219,37 @@ void *parsePerm() {
 }
 
 void parser(int argc, char *argv[]) {
-    debug("parser begin");
-    if (argc < 2) {
-        printf("usage: ./smartfolder destination source");
+    logger("parser begin\n", DEBUG, true);
+    if(mkdir(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1){
+        if(errno != EEXIST){
+            perror("mkdir destination");
+            exit(3);
+        }
     }
-    mkdirw(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if (isDirectory(argv[1])) {
         if(isWriteable(argv[1])) {
             linker_destination = argv[1];
         }else{
-            logFile("error: no write access");
-            exit(42);
+            logger("no write access to destination\n", ERROR, true);
+            exit(4);
         }
     } else {
-        printf("error: destination is not a directory\n");
+        logger("destination is not a directory\n", ERROR, true);
+        exit(5);
     }
 
     if (isDirectory(argv[2])) {
         if(!isReadable(argv[2])){
-            logFile("error: no read access");
-            exit(42);
+            logger("source cannot be read\n", ERROR, true);
+            exit(6);
         }
-        //linker_destination = argv[2];
     } else {
-        printf("error: source is not a directory\n");
+        logger("source is not a directory\n", ERROR, true);
+        exit(7);
     }
     initFilter();
 
-
+    logger("parse boolean expression with shunting-yard\n", DEBUG, true);
     //Algorithm Shunting-yard
     stackS *stack;
     createStack(&stack);
@@ -243,19 +263,26 @@ void parser(int argc, char *argv[]) {
     int countTotal = 0, countConditions = 0;
     for (int i = 3; i < argc; ++i) {
         if ((logicGate = isLogicGate(argv[i])) >= 0) {
+            logger("%s is a logic gate\n", DEBUG, true, argv[i]);
             if (logicGate == BRACKET_CLOSE) {
+                logger("%s is a bracket close\n", DEBUG, true, argv[i]);
                 while (!isEmpty(stack) && (logicGate = *((int *) pop(&stack))) != BRACKET_OPEN) {
+                    logger("pop logic gate %s\n", DEBUG, true, getLogicGateName(logicGate));
                     length += sprintf(expression + length, "%d ", logicGate);
                     countTotal++;
                 }
+                logger("actual expression %s\n", DEBUG, true, expression);
             } else {
+                logger("%s push in stack\n", DEBUG, true, argv[i]);
                 int *value = mallocw(sizeof(int));
                 *value = logicGate;
                 push(&stack, value);
 
             }
         } else {
+            logger("%s not is a logic gate\n", DEBUG, true, argv[i]);
             length += sprintf(expression + length, "%s ", argv[i]);
+            logger("actual expression %s\n", DEBUG, true, expression);
             if (argv[i][0] == '-') {
                 countTotal++;
                 countConditions++;
