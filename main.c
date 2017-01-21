@@ -7,6 +7,7 @@
 #include "wrappersyscall.h"
 #include "crawler.h"
 #include "destroyer.h"
+#include "linker.h"
 
 /**
  *
@@ -55,8 +56,9 @@ int main(int argc, char *argv[]) {
             logger("child started\n", DEBUG, true);
             while (1) {
                 crawler_launcher(argv[2]);
-                //checkFiles(argv[1]);
-                logger("crawler and check files ok\n", DEBUG, true);
+                logger("crawler ok\n", DEBUG, true);
+                checkFiles(linker_destination);
+                logger("check files ok\n", DEBUG, true);
                 sleep(10);
             }
         } else {

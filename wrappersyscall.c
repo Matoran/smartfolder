@@ -24,7 +24,7 @@ pid_t forkw() {
 
 void statw(const char *restrict path, struct stat *restrict buf){
     if(stat(path, buf) < 0){
-        printf("error stat file");
+        perror("stat");
         exit(1);
     }
 }
@@ -48,7 +48,7 @@ void *mallocw(size_t size){
 void readlinkw(const char *path, char *buf, size_t bufsiz){
     ssize_t r = readlink(path, buf, bufsiz);
     if (r == -1) {
-        perror("error: in readlink");
+        perror("readlink");
         exit(EXIT_FAILURE);
     }
 }
@@ -56,7 +56,7 @@ void readlinkw(const char *path, char *buf, size_t bufsiz){
 void symlinkw(const char *path1, const char *path2){
     int s = symlink(path1, path2);
     if(s == -1){
-        perror("error: symlink");
+        perror("symlink");
         exit(42);
     }
 }
@@ -64,7 +64,7 @@ void symlinkw(const char *path1, const char *path2){
 void rmdirw(const char *path){
     int r = rmdir(path);
     if (r == -1){
-        perror("fail rmdir");
+        perror("rmdir");
         exit(42);
     }
 }
@@ -72,7 +72,7 @@ void rmdirw(const char *path){
 void unlinkw(const char *pathname){
     int un = unlink(pathname);
     if (un == -1) {
-        perror("fail unlink");
+        perror("unlink");
         exit(42);
     }
 }
@@ -80,7 +80,7 @@ void unlinkw(const char *pathname){
 void nftww(const char *dirpath, int (*fn) (const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf),
      int nopenfd, int flags){
     if (nftw(dirpath, fn, nopenfd, flags) == -1) {
-        perror("nftw error");
+        perror("nftw");
         exit(EXIT_FAILURE);
     }
 }
