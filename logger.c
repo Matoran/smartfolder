@@ -3,6 +3,7 @@
 //
 
 #include "logger.h"
+#include "wrappersyscall.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -50,19 +51,14 @@ void savePID(const char *name, pid_t pid){
 
     char *fullName = malloc(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+1));
     strcpy(fullName, "/tmp/smartfolder/");
-    if(mkdir(fullName, S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1){
-        if(errno != EEXIST){
-            logFile("save pid impossible");
-            exit(2);
-        }
-    }
+    mkdirw(fullName, S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     strcat(fullName, basename(name));
     sprintf(stringPID, "%ld", (long)pid);
     writeInFile(fullName, stringPID);
 }
 
 pid_t readPID(const char *name){
-    char *fullName = malloc(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+1));
+    char *fullName = mallocw(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+1));
     strcpy(fullName, "/tmp/smartfolder/");
     strcat(fullName, name);
     FILE *fp;
@@ -89,7 +85,7 @@ void savePath(const char *name, const char *realpath) {
 }
 
 char* readPath(const char *name){
-    char *fullName = malloc(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+strlen("path")+1));
+    char *fullName = mallocw(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+strlen("path")+1));
     strcpy(fullName, "/tmp/smartfolder/");
     strcat(fullName, name);
     strcat(fullName, "path");
