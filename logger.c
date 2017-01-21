@@ -50,7 +50,7 @@ void savePID(const char *name, pid_t pid){
 }
 
 pid_t readPID(const char *name){
-    char *fullName = malloc(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+1));
+    char *fullName = mallocw(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+1));
     strcpy(fullName, "/tmp/smartfolder/");
     strcat(fullName, name);
     FILE *fp;
@@ -77,7 +77,7 @@ void savePath(const char *name, const char *realpath) {
 }
 
 char* readPath(const char *name){
-    char *fullName = malloc(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+strlen("path")+1));
+    char *fullName = mallocw(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+strlen("path")+1));
     strcpy(fullName, "/tmp/smartfolder/");
     strcat(fullName, name);
     strcat(fullName, "path");
