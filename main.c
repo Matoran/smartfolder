@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
             logger("child started\n", DEBUG, true);
             while (1) {
                 crawler_launcher(argv[2]);
-                //checkFiles();
+                //checkFiles(argv[1]);
                 logger("crawler and check files ok\n", DEBUG, true);
                 sleep(10);
             }
@@ -64,6 +64,6 @@ int main(int argc, char *argv[]) {
             savePath(argv[1], realpath(argv[1], NULL));
         }
     }
-    logger("smartfolder parent ended", DEBUG, true);
+    logger("smartfolder parent ended\n", DEBUG, true);
     return EXIT_SUCCESS;
 }
