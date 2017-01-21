@@ -21,7 +21,7 @@ void writeInFile(const char *filename, const char *message){
     fclose(fp);
 }
 
-void logger(const char *filename, const char *format, int type, ...){
+void logger(const char *format, int type, ...){
     if(LEVEL & type){
         va_list args;
         va_start(args, format);
@@ -78,4 +78,33 @@ pid_t readPID(const char *name){
     }
 }
 
+
+void savePath(const char *name, const char *realpath) {
+    char *fullName = malloc(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+strlen("path")+1));
+    strcpy(fullName, "/tmp/smartfolder/");
+    strcat(fullName, basename(name));
+    strcat(fullName, "path");
+    writeInFile(fullName, realpath);
+}
+
+char* readPath(const char *name){
+    char *fullName = malloc(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+strlen("path")+1));
+    strcpy(fullName, "/tmp/smartfolder/");
+    strcat(fullName, name);
+    strcat(fullName, "path");
+    FILE *fp;
+    fp = fopen(fullName, "r");
+    if(fp != NULL){
+        char * line = NULL;
+        size_t len = 0;
+        len = getline(&line, &len, fp);
+        fclose(fp);
+        line[len-1] = '\0';
+        remove(fullName);
+        return line;
+    }else{
+        perror("fopen");
+        exit(3);
+    }
+}
 
