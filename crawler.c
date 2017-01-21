@@ -8,6 +8,7 @@
 #include "crawler.h"
 #include "logger.h"
 #include "filter.h"
+#include "wrappersyscall.h"
 
 
 /*
@@ -38,8 +39,5 @@ static int display_info(const char *fpath, const struct stat *sb, int tflag, str
 
 void crawler_launcher(const char *path) {
     char* realPath = realpath(path, NULL);
-    if (nftw(realPath, display_info, 20, 0) == -1) {
-        logFile("nftw error");
-        exit(EXIT_FAILURE);
-    }
+    nftww(realPath, display_info, 20, 0);
 }

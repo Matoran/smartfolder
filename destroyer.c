@@ -8,30 +8,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "destroyer.h"
+#include "wrappersyscall.h"
 
 static int removeLink(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf){
     if(tflag != FTW_DP) {
-        int un = unlink(fpath);
-
-        if (un == -1) {
-            perror("fail unlink");
-            exit(42);
-        }
-        return un;
+        unlinkw(fpath);
     }else{
-        int r = rmdir(fpath);
-
-        if (r == -1){
-            perror("fail rmdir");
-            exit(42);
-        }
-        return r;
+        rmdirw(fpath);
     }
+    return 0;
 }
 
 void destroy(char *path){
-    if (nftw(path, removeLink, 64, FTW_DEPTH | FTW_PHYS) == -1) {
-        perror("nftw error");
-        exit(EXIT_FAILURE);
-    }
+    nftww(path, removeLink, 64, FTW_DEPTH | FTW_PHYS);
 }

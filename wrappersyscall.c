@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE 500
 #include <time.h>
 #include <sys/stat.h>
 #include <zconf.h>
@@ -5,7 +6,10 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <ftw.h>
+#include <errno.h>
 #include "wrappersyscall.h"
+#include "logger.h"
 
 
 pid_t forkw() {
@@ -45,5 +49,47 @@ void readlinkw(const char *path, char *buf, size_t bufsiz){
     if (r == -1) {
         perror("error: in readlink");
         exit(EXIT_FAILURE);
+    }
+}
+
+void symlinkw(const char *path1, const char *path2){
+    int s = symlink(path1, path2);
+    if(s == -1){
+        perror("error: symlink");
+        exit(42);
+    }
+}
+
+void rmdirw(const char *path){
+    int r = rmdir(path);
+    if (r == -1){
+        perror("fail rmdir");
+        exit(42);
+    }
+}
+
+void unlinkw(const char *pathname){
+    int un = unlink(pathname);
+    if (un == -1) {
+        perror("fail unlink");
+        exit(42);
+    }
+}
+
+void nftww(const char *dirpath, int (*fn) (const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf),
+     int nopenfd, int flags){
+    if (nftw(dirpath, fn, nopenfd, flags) == -1) {
+        perror("nftw error");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void mkdirw(const char *path, mode_t mode){
+    if(mkdir(path, mode) == -1){
+        if(errno != EEXIST){
+            logFile("parser error creation directory");
+            perror("mkdir destination");
+            exit(2);
+        }
     }
 }

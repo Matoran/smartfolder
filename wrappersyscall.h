@@ -14,5 +14,11 @@ void statw(const char *restrict path, struct stat *restrict buf);
 void lstatw(const char *path, struct stat *buf);
 void *mallocw(size_t size);
 void readlinkw(const char *path, char *buf, size_t bufsiz);
+void symlinkw(const char *path1, const char *path2);
+void rmdirw(const char *path);
+void unlinkw(const char *pathname);
+void nftww(const char *dirpath, int (*fn) (const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf),
+           int nopenfd, int flags);
+void mkdirw(const char *path, mode_t mode);
 
 #endif //SEARCHFOLDER_WRAPPERSYSCALL_H

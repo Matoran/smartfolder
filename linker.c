@@ -34,11 +34,10 @@ bool isExist(const char *linkSource, char *linkDestination){
 }
 
 void zelda(const char *linkSource, const char *filename){
-    char *linkDestination = malloc(sizeof(char)*(strlen(linker_destination)+strlen(filename)+10));
+    char *linkDestination = mallocw(sizeof(char)*(strlen(linker_destination)+strlen(filename)+10));
     strcpy(linkDestination, linker_destination);
     strcat(linkDestination, "/");
     strcat(linkDestination, filename);
-    printf("destination %s\n",linker_destination);
     FILE* file = NULL;
     int i = 0;
     bool open = true;
@@ -49,8 +48,6 @@ void zelda(const char *linkSource, const char *filename){
             fclose(file);
             if(isExist(linkSource,linkDestination)){
                 return;
-            }else{
-                printf("WTF %s %s", linkSource, linkDestination);
             }
             i++;
             sprintf(&linkDestination[length], "%d", i);
@@ -59,6 +56,6 @@ void zelda(const char *linkSource, const char *filename){
         }
     }while(open);
 
-    symlink(linkSource, linkDestination);
+    symlinkw(linkSource, linkDestination);
     free(linkDestination);
 }

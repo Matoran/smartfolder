@@ -16,6 +16,7 @@
 #include "parser.h"
 #include "stack.h"
 #include "linker.h"
+#include "wrappersyscall.h"
 
 bool checkName(int pos, const char *fpath){
     nameS *condition = ((nameS*)filterConditions[pos]);
@@ -159,16 +160,13 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
     if(size == 0 || popBool(&stack)){
         zelda(fpath, fpath + ftwbuf->base);
     }
-    printf("\nfilename \t%s\n",  fpath + ftwbuf->base);
+    /*printf("\nfilename \t%s\n",  fpath + ftwbuf->base);
     printf("path \t%s\n", fpath);
     printf("size \t%7jd\n", (intmax_t) sb->st_size);
 
     //Time
     struct stat bufstat;
-    if(stat(fpath, &bufstat) < 0){
-        logFile("error stat file");
-        exit(1);
-    }
+    statw(fpath, &bufstat);
     char buff[20];
     strftime(buff, 20, "%Y/%m/%d", localtime(&bufstat.st_atime));
     printf("Date \t%s\n", buff);
@@ -185,10 +183,10 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
     printf( (bufstat.st_mode & S_IXGRP) ? "x" : "-");
     printf( (bufstat.st_mode & S_IROTH) ? "r" : "-");
     printf( (bufstat.st_mode & S_IWOTH) ? "w" : "-");
-    printf( (bufstat.st_mode & S_IXOTH) ? "x" : "-");
+    printf( (bufstat.st_mode & S_IXOTH) ? "x" : "-");*/
 
 
-    printf("\n");
+    /*printf("\n");
 
     //group and user
     struct passwd *pw = getpwuid(bufstat.st_uid);
@@ -196,13 +194,13 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
     //printf("%d",bufstat.st_uid);
     if(pw != 0)
         printf("user \t%s\n", pw->pw_name);
-        /*pw = getpwnam(pw->pw_name);
+        pw = getpwnam(pw->pw_name);
         if(pw != 0)
-            printf("%d ",pw->pw_uid);*/
+            printf("%d ",pw->pw_uid);
     if(gr != 0)
         printf("groupe \t%s", gr->gr_name);
 
-    printf("\n\n");
+    printf("\n\n");*/
 
 
 }

@@ -18,8 +18,7 @@
 
 static int isDirectory(const char *path) {
     struct stat statbuf;
-    if (stat(path, &statbuf) != 0)
-        return 0;
+    statw(path, &statbuf);
     return S_ISDIR(statbuf.st_mode);
 }
 
@@ -71,7 +70,7 @@ int conditionType(const char *string) {
 }
 
 void *parseName() {
-    nameS *name = malloc(sizeof(nameS));
+    nameS *name = mallocw(sizeof(nameS));
     char *token = strtok(NULL, " ");
     if (strcmp(token, "-") == 0) {
         name->exactName = false;
@@ -87,7 +86,7 @@ void *parseName() {
 }
 
 void *parseSize() {
-    sizeS *size = malloc(sizeof(sizeS));
+    sizeS *size = mallocw(sizeof(sizeS));
     //symbol (+, -, =)
     char *token = strtok(NULL, " ");
     if (strcmp(token, "+") == 0) {
@@ -184,7 +183,7 @@ void *parseOwner() {
 }
 
 void *parsePerm() {
-    permS *perm = malloc(sizeof(permS));
+    permS *perm = mallocw(sizeof(permS));
     char *token = strtok(NULL, " ");
     if (strcmp(token, "+") == 0) {
         perm->symbol = PLUS;
@@ -207,13 +206,7 @@ void parser(int argc, char *argv[]) {
     if (argc < 2) {
         printf("usage: ./smartfolder destination source");
     }
-    if(mkdir(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1){
-        if(errno != EEXIST){
-            logFile("parser error creation directory");
-            perror("mkdir destination");
-            exit(2);
-        }
-    }
+    mkdirw(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if (isDirectory(argv[1])) {
         if(isWriteable(argv[1])) {
             linker_destination = argv[1];
@@ -242,10 +235,10 @@ void parser(int argc, char *argv[]) {
     createStack(&stack);
     int logicGate;
     //simulate bracket open
-    int *bracketOpen = malloc(sizeof(int));
+    int *bracketOpen = mallocw(sizeof(int));
     *bracketOpen = BRACKET_OPEN;
     push(&stack, bracketOpen);
-    char *expression = malloc(sizeof(char) * (argc - 3) * 255);
+    char *expression = mallocw(sizeof(char) * (argc - 3) * 255);
     int length = 0;
     int countTotal = 0, countConditions = 0;
     for (int i = 3; i < argc; ++i) {
@@ -256,7 +249,7 @@ void parser(int argc, char *argv[]) {
                     countTotal++;
                 }
             } else {
-                int *value = malloc(sizeof(int));
+                int *value = mallocw(sizeof(int));
                 *value = logicGate;
                 push(&stack, value);
 
@@ -278,8 +271,8 @@ void parser(int argc, char *argv[]) {
     printf("expression: %s\n", expression);
     printf("count condition : %d\n", countConditions);
     printf("count total : %d\n", countTotal);
-    filterConditions = malloc(sizeof(void*)*countConditions);
-    expressionFilter = malloc(sizeof(int)*countTotal);
+    filterConditions = mallocw(sizeof(void*)*countConditions);
+    expressionFilter = mallocw(sizeof(int)*countTotal);
     //now expression is post fixed
     char *token = strtok(expression, " ");
     int i = 0;
@@ -292,7 +285,6 @@ void parser(int argc, char *argv[]) {
             switch (type) {
                 case NAMES:
                     filterConditions[i] =  parseName();
-
                     break;
                 case SIZES:
                     filterConditions[i] =  parseSize();
