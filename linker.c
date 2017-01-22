@@ -40,6 +40,7 @@ void zelda(const char *linkSource, const char *filename){
     strcpy(linkDestination, linker_destination);
     strcat(linkDestination, "/");
     strcat(linkDestination, filename);
+    strcat(linkDestination, ".sl");
     int i = 0;
     bool open = true;
     size_t length = strlen(linkDestination);

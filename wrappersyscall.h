@@ -5,6 +5,8 @@
 #ifndef SEARCHFOLDER_WRAPPERSYSCALL_H
 #define SEARCHFOLDER_WRAPPERSYSCALL_H
 
+#define _XOPEN_SOURCE 500
+#include <ftw.h>
 #include <zconf.h>
 #include <sys/stat.h>
 #include <unistd.h>

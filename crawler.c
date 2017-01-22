@@ -5,6 +5,7 @@
 #define _XOPEN_SOURCE 500
 #include <ftw.h>
 #include <stdlib.h>
+#include <zconf.h>
 #include "crawler.h"
 #include "logger.h"
 #include "filter.h"
@@ -32,12 +33,16 @@ FTW_SLN fpath  is a symbolic link pointing to a nonexistent file.  (This occurs 
 static int display_info(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf) {
     //is a file
     if(tflag == FTW_F){
+        logger("crawler found file %s\n", DEBUG, true, fpath);
         filter(fpath, sb, tflag, ftwbuf);
     }
     return 0;           /* To tell nftw() to continue */
 }
 
 void crawler_launcher(const char *path) {
+    logger("crawler begin %s %s\n", DEBUG, true, path, getcwd(NULL, 0));
     char* realPath = realpath(path, NULL);
+    logger("crawler begin realpath %s\n", DEBUG, true, realPath);
     nftww(realPath, display_info, 20, 0);
+    logger("crawler end\n", DEBUG, true);
 }

@@ -110,11 +110,11 @@ void initFilter(){
 }
 
 void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf){
+    logger("filter begin\n", DEBUG, true);
     stackBoolS *stack;
     createStackBool(&stack);
 
     int j = 0;
-    printf("\n");
     for (int k = 0; k < size; ++k) {
         printf("%d ", expressionFilter[k]);
     }
@@ -155,52 +155,9 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
         displayStackBool(stack);
         printf("\n");
     }
-    //printf("valid: %d", popBool(&stack));
-    //size, path, filename
     if(size == 0 || popBool(&stack)){
         zelda(fpath, fpath + ftwbuf->base);
     }
-    /*printf("\nfilename \t%s\n",  fpath + ftwbuf->base);
-    printf("path \t%s\n", fpath);
-    printf("size \t%7jd\n", (intmax_t) sb->st_size);
 
-    //Time
-    struct stat bufstat;
-    statw(fpath, &bufstat);
-    char buff[20];
-    strftime(buff, 20, "%Y/%m/%d", localtime(&bufstat.st_atime));
-    printf("Date \t%s\n", buff);
-
-    //File Permissions
-    printf("file Permissions \t");
-    printf("%o\n", sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO));
-    //printf( (S_ISDIR(bufstat.st_mode)) ? "d" : "-");
-    printf( (bufstat.st_mode & S_IRUSR) ? "r" : "-");
-    printf( (bufstat.st_mode & S_IWUSR) ? "w" : "-");
-    printf( (bufstat.st_mode & S_IXUSR) ? "x" : "-");
-    printf( (bufstat.st_mode & S_IRGRP) ? "r" : "-");
-    printf( (bufstat.st_mode & S_IWGRP) ? "w" : "-");
-    printf( (bufstat.st_mode & S_IXGRP) ? "x" : "-");
-    printf( (bufstat.st_mode & S_IROTH) ? "r" : "-");
-    printf( (bufstat.st_mode & S_IWOTH) ? "w" : "-");
-    printf( (bufstat.st_mode & S_IXOTH) ? "x" : "-");*/
-
-
-    /*printf("\n");
-
-    //group and user
-    struct passwd *pw = getpwuid(bufstat.st_uid);
-    struct group  *gr = getgrgid(bufstat.st_gid);
-    //printf("%d",bufstat.st_uid);
-    if(pw != 0)
-        printf("user \t%s\n", pw->pw_name);
-        pw = getpwnam(pw->pw_name);
-        if(pw != 0)
-            printf("%d ",pw->pw_uid);
-    if(gr != 0)
-        printf("groupe \t%s", gr->gr_name);
-
-    printf("\n\n");*/
-
-
+    logger("crawler end\n", DEBUG, true);
 }

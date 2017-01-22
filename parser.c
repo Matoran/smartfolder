@@ -259,6 +259,7 @@ void parser(int argc, char *argv[]) {
     *bracketOpen = BRACKET_OPEN;
     push(&stack, bracketOpen);
     char *expression = mallocw(sizeof(char) * (argc - 3) * 255);
+    expression[0] = '\0';
     int length = 0;
     int countTotal = 0, countConditions = 0;
     for (int i = 3; i < argc; ++i) {
@@ -295,7 +296,7 @@ void parser(int argc, char *argv[]) {
         length += sprintf(expression + length, "%d ", logicGate);
         countTotal++;
     }
-    logger("actual expression %s, count conditions %d, count total %d\n", DEBUG, true, expression, countConditions, countTotal);
+    logger("actual expression \"%s\", count conditions %d, count total %d\n", DEBUG, true, expression, countConditions, countTotal);
     filterConditions = mallocw(sizeof(void*)*countConditions);
     expressionFilter = mallocw(sizeof(int)*countTotal);
     //now expression is post fixed

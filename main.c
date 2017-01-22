@@ -50,7 +50,6 @@ int main(int argc, char *argv[]) {
         logger("smartfolder number of params ok\n", DEBUG, true);
         parser(argc, argv);
         pid_t value = forkw();
-        printf("\n%ld %s\n", (long) value, argv[1]);
         //child
         if (value == 0) {
             logger("child started\n", DEBUG, true);
@@ -59,9 +58,10 @@ int main(int argc, char *argv[]) {
                 logger("crawler ok\n", DEBUG, true);
                 checkFiles(linker_destination);
                 logger("check files ok\n", DEBUG, true);
-                sleep(10);
+                sleep(1);
             }
         } else {
+            logger("child PID %ld\n", DEBUG, true, (long) value);
             savePID(argv[1], value);
             savePath(argv[1], realpath(argv[1], NULL));
         }
