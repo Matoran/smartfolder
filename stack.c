@@ -1,7 +1,11 @@
-//
-// Created by matoran on 12/28/16.
-//
-
+/**
+ * \author ISELI Cyril & RODRIGUES Marco
+ * \brief ADD Text
+ * \version 0.1
+ * \date December 2016 and January 2017
+ *
+ * ADD text
+ */
 #include <stdlib.h>
 #include "stack.h"
 #include "logger.h"

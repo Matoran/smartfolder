@@ -1,7 +1,11 @@
-//
-// Created by matoran on 12/16/16.
-//
-
+/**
+ * \author ISELI Cyril & RODRIGUES Marco
+ * \brief ADD Text
+ * \version 0.1
+ * \date December 2016 and January 2017
+ *
+ * ADD text
+ */
 #define _XOPEN_SOURCE 500
 #include <ftw.h>
 #include <stdlib.h>

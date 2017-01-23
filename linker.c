@@ -1,21 +1,34 @@
-//
-// Created by matoran on 12/16/16.
-//
+/**
+ * \author ISELI Cyril & RODRIGUES Marco
+ * \brief Create the symlink
+ * \version 0.1
+ * \date December 2016 and January 2017
+ *
+ * Will create the symlink in the smartfolder with
+ * the file received from the filter. If any
+ * file have the same name, we add a number in the
+ * end of file.
+ *
+ */
 
 #include <memory.h>
 #include <stdio.h>
-#include <zconf.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
-#include <errno.h>
 #include <sys/stat.h>
 #include "linker.h"
 #include "logger.h"
-#include <unistd.h>
-#include <time.h>
 #include "wrappersyscall.h"
 
+/**
+ * Test if the file is existing or not
+ * and if the symlink is the same as another
+ * @param linkSource path of filtered file
+ * @param filename name of filtered file
+ * @return int: SYMLINK_NO_EXIST if the file is not linked in the smartfolder
+ *              SAME_SYMLINK if the symlink is the same as another
+ *              SYMLINK_EXIST if the filename is same as another but not the symlink
+ */
 int exist(const char *linkSource, char *linkDestination){
     struct stat sb;
     char *linkname;
@@ -35,6 +48,12 @@ int exist(const char *linkSource, char *linkDestination){
     return SYMLINK_EXIST;
 }
 
+/**
+ * Create the symlink between the file filtered and
+ * the file in the smart folder
+ * @param linkSource path of filtered file
+ * @param filename name of filtered file
+ */
 void zelda(const char *linkSource, const char *filename){
     logger("linker begin\n", DEBUG, true);
     char *linkDestination = mallocw(sizeof(char)*(strlen(linker_destination)+strlen(filename)+10));

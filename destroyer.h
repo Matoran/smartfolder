@@ -1,6 +1,7 @@
-//
-// Created by cyril on 1/20/17.
-//
+/**
+ * \author ISELI Cyril & RODRIGUES Marco
+ * \date December 2016 and January 2017
+ */
 
 #ifndef SEARCHFOLDER_DESTROYER_H
 #define SEARCHFOLDER_DESTROYER_H

@@ -1,3 +1,11 @@
+/**
+ * \author ISELI Cyril & RODRIGUES Marco
+ * \brief ADD Text
+ * \version 0.1
+ * \date December 2016 and January 2017
+ *
+ * ADD text
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

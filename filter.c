@@ -1,7 +1,16 @@
-//
-// Created by matoran on 12/16/16.
-//
+/**
+ * \author ISELI Cyril & RODRIGUES Marco
+ * \brief Filter a file
+ * \version 0.1
+ * \date December 2016 and January 2017
+ *
+ * Filter a file with the parameters in command line.
+ */
 
+
+ /**
+  * Xopen
+  */
 #define _XOPEN_SOURCE 500
 #include <ftw.h>
 #include <stdio.h>
@@ -18,6 +27,13 @@
 #include "linker.h"
 #include "wrappersyscall.h"
 
+/**
+ * Check if the name is same the parameters.
+ * The name can be partial or not.
+ * @param pos position in the postfixed expression
+ * @param fpath path of the file
+ * @return bool if name is valid
+ */
 bool checkName(int pos, const char *fpath){
     nameS *condition = ((nameS*)filterConditions[pos]);
     if(condition->exactName){
@@ -27,6 +43,12 @@ bool checkName(int pos, const char *fpath){
     }
 }
 
+/**
+ * Check if the size is same, smaller or bigger than the parameters.
+ * @param pos position in the postfixed expression
+ * @param size size of file
+ * @return bool if size is valid
+ */
 bool checkSize(int pos, off_t size){
     sizeS *condition = ((sizeS*)filterConditions[pos]);
     switch (condition->symbol){
@@ -42,7 +64,13 @@ bool checkSize(int pos, off_t size){
     }
 }
 
-
+/**
+ * Check if the date is same, smaller or bigger than the parameters.
+ * The dates are in 3 modes, Status, Accessed or Modified.
+ * @param pos position in the postfixed expression
+ * @param sb is the stat of file
+ * @return bool if date is valid
+ */
 bool checkDate(int pos, const struct stat *sb){
     dateS *condition = ((dateS*)filterConditions[pos]);
     time_t time;
@@ -76,6 +104,12 @@ bool checkDate(int pos, const struct stat *sb){
     }
 }
 
+/**
+ * Check if the file belongs to a group or user of parameters.
+ * @param pos position in the postfixed expression
+ * @param sb is the stat of file
+ * @return bool if group or user is valid
+ */
 bool checkOwner(int pos, const struct stat *sb){
     ownerS *condition = ((ownerS*)filterConditions[pos]);
     switch (condition->type){
@@ -89,6 +123,12 @@ bool checkOwner(int pos, const struct stat *sb){
     }
 }
 
+/**
+ * Check if the permission is the same, smaller or bigger than parameters.
+ * @param pos position in the postfixed expression
+ * @param sb is the stat of file
+ * @return bool if permission is valid
+ */
 bool checkPerm(int pos, const struct stat *sb){
     permS *condition = ((permS*)filterConditions[pos]);
     int perms = sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
@@ -105,10 +145,21 @@ bool checkPerm(int pos, const struct stat *sb){
     }
 }
 
+/**
+ * Initialize the global variable: filterConditions.
+ */
 void initFilter(){
     filterConditions = NULL;
 }
 
+/**
+ * Filter a file based on the parameters in the command line.
+ * Call the function zelda(linker) with the filtered file.
+ * @param fpath path of the file
+ * @param sb stat of the file
+ * @param tflag flag of the file
+ * @param ftwbuf
+ */
 void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf){
     logger("filter begin\n", DEBUG, true);
     stackBoolS *stack;

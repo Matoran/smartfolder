@@ -1,6 +1,11 @@
-//
-// Created by cyril on 1/20/17.
-//
+/**
+ * \author ISELI Cyril & RODRIGUES Marco
+ * \brief ADD Text
+ * \version 0.1
+ * \date December 2016 and January 2017
+ *
+ * ADD text
+ */
 #define _GNU_SOURCE
 
 #include <stdio.h>

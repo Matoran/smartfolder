@@ -1,6 +1,7 @@
-//
-// Created by matoran on 12/28/16.
-//
+/**
+ * \author ISELI Cyril & RODRIGUES Marco
+ * \date December 2016 and January 2017
+ */
 
 #ifndef SEARCHFOLDER_STACK_H
 #define SEARCHFOLDER_STACK_H
