@@ -8,15 +8,16 @@
 
 #include <stdbool.h>
 
-typedef struct stackS{
-    void *value;
-    struct stackS *next;
-}stackS;
+typedef struct stackIntS{
+    int value;
+    struct stackIntS *next;
+}stackIntS;
 
-extern void createStack(stackS **stack);
-extern void push(stackS **stack, void *value);
-extern void *pop(stackS **stack);
-extern bool isEmpty(stackS *stack);
+extern void createStackInt(stackIntS **stack);
+extern void pushInt(stackIntS **stack, int value);
+extern int popInt(stackIntS **stack);
+extern bool isEmptyInt(stackIntS *stack);
+extern int headInt(stackIntS **stack);
 
 typedef struct stackBoolS{
     bool value;

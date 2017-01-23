@@ -11,12 +11,8 @@
 #include "logger.h"
 #include <stdio.h>
 
-void createStack(stackS **stack){
-    *stack = NULL;
-}
-
-void push(stackS **stack, void *value){
-    stackS *element = malloc(sizeof(stackS));
+void pushInt(stackIntS **stack, int value){
+    stackIntS *element = malloc(sizeof(stackIntS));
     element->next = *stack;
     element->value = value;
     *stack = element;
@@ -24,26 +20,30 @@ void push(stackS **stack, void *value){
 
 
 
-void *pop(stackS **stack){
-    if(isEmpty(*stack)){
+int popInt(stackIntS **stack){
+    if(isEmptyInt(*stack)){
         logger("stack error: empty stack and pop\n", ERROR, true);
     }else{
-        void *nb = (*stack)->value;
-        stackS *temp = *stack;
+        int nb = (*stack)->value;
+        stackIntS *temp = *stack;
         *stack = (*stack)->next;
         free(temp);
         return nb;
     }
 }
 
-
-
-bool isEmpty(stackS *stack){
-    return stack == NULL;
+int headInt(stackIntS **stack){
+    if(isEmptyInt(*stack)){
+        logger("stack error: empty stack and pop\n", ERROR, true);
+    }else{
+        return (*stack)->value;
+    }
 }
 
-void createStackBool(stackBoolS **stack){
-    *stack = NULL;
+
+
+bool isEmptyInt(stackIntS *stack){
+    return stack == NULL;
 }
 
 void pushBool(stackBoolS **stack, bool value){

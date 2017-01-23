@@ -8,8 +8,6 @@
  */
 #define _XOPEN_SOURCE 500
 #include <ftw.h>
-#include <stdlib.h>
-#include <zconf.h>
 #include "crawler.h"
 #include "logger.h"
 #include "filter.h"

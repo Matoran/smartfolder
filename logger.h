@@ -12,7 +12,7 @@
 #define LOG 1
 #define DEBUG 2
 #define ERROR 4
-#define LEVEL LOG | DEBUG | ERROR
+#define LEVEL (LOG | ERROR)
 
 static void writeInFile(const char *filename, const char *message);
 extern void logger(const char *format, int type, bool begin, ...);

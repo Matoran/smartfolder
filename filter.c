@@ -162,9 +162,7 @@ void initFilter(){
  */
 void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf){
     logger("filter begin\n", DEBUG, true);
-    stackBoolS *stack;
-    createStackBool(&stack);
-
+    stackBoolS *stack = NULL;
     int j = 0;
     logger("expression: ", DEBUG, true);
     for (int i = 0; i < size; ++i) {

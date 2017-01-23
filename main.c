@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
                 crawler_launcher(absolutePath);
                 checkFiles(linker_destination);
                 logger("\n", DEBUG, false);
-                sleep(1);
+                sleep(5);
             }
         } else {
             logger("child PID %ld\n", DEBUG, true, (long) value);

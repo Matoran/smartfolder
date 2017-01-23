@@ -21,6 +21,12 @@
 #include "stack.h"
 #include "wrappersyscall.h"
 
+bool isQuoted(const char *string) {
+    if (string[0] == '%' && string[strlen(string) - 1] == '%')
+        return true;
+    return false;
+}
+
 char *getLogicGateName(int val) {
     switch (val) {
         case NOT:
@@ -257,64 +263,59 @@ void parser(int argc, char *argv[]) {
 
     logger("parse boolean expression with shunting-yard\n", DEBUG, true);
     //Algorithm Shunting-yard
-    stackS *stack;
-    createStack(&stack);
+    stackIntS *stack = NULL;
     int logicGate;
     //simulate bracket open
-    int *bracketOpen = mallocw(sizeof(int));
-    *bracketOpen = BRACKET_OPEN;
-    push(&stack, bracketOpen);
+    pushInt(&stack, BRACKET_OPEN);
     char *expression = mallocw(sizeof(char) * (argc - 3) * 255);
     expression[0] = '\0';
     int length = 0;
     int countTotal = 0, countConditions = 0;
-    bool popAfterCondition = false, condition = false;
     for (int i = 3; i < argc; ++i) {
         if ((logicGate = isLogicGate(argv[i])) >= 0) {
             logger("%s is a logic gate\n", DEBUG, true, argv[i]);
             if (logicGate == BRACKET_CLOSE) {
                 logger("%s is a bracket close\n", DEBUG, true, argv[i]);
-                while (!isEmpty(stack) && (logicGate = *((int *) pop(&stack))) != BRACKET_OPEN) {
+                while (!isEmptyInt(stack) && (logicGate = popInt(&stack)) != BRACKET_OPEN) {
                     logger("pop logic gate %s\n", DEBUG, true, getLogicGateName(logicGate));
                     length += sprintf(expression + length, "%d ", logicGate);
                     countTotal++;
                 }
                 logger("actual expression %s\n", DEBUG, true, expression);
             } else {
-                if (logicGate == NOT && isLogicGate(argv[i + 1]) != BRACKET_OPEN) {
-                    popAfterCondition = true;
+                while (logicGate != NOT && logicGate != BRACKET_OPEN && !isEmptyInt(stack) && headInt(&stack) == NOT) {
+                    logger("pop logic gate %s\n", DEBUG, true, getLogicGateName(headInt(&stack)));
+                    length += sprintf(expression + length, "%d ", popInt(&stack));
+                    countTotal++;
                 }
                 logger("%s push in stack\n", DEBUG, true, argv[i]);
-                int *value = mallocw(sizeof(int));
-                *value = logicGate;
-                push(&stack, value);
+                pushInt(&stack, logicGate);
             }
         } else {
             logger("%s is not a logic gate\n", DEBUG, true, argv[i]);
-            length += sprintf(expression + length, "%s ", argv[i]);
-
+            if (isQuoted(argv[i])) {
+                length += sprintf(expression + length, "%s ", &argv[i][1]);
+                strcpy(&expression[length - 2], " ");
+                logger("is quoted new expression : %s \n", DEBUG, true, expression);
+            } else {
+                length += sprintf(expression + length, "%s ", argv[i]);
+            }
             logger("actual expression %s\n", DEBUG, true, expression);
-            if (argv[i][0] == '-') {
+            if (argv[i][0] == '-' && strlen(argv[i]) > 1) {
                 countTotal++;
                 countConditions++;
-                if (popAfterCondition && condition) {
-                    length += sprintf(expression + length, "%d ", *((int *) pop(&stack)));
-                    popAfterCondition = false;
-                    condition = false;
-                }
-                condition = true;
             }
 
         }
+
     }
     //simulate bracket close expression is surrounded by bracket open and bracket close
-    while (!isEmpty(stack) && (logicGate = *((int *) pop(&stack))) != BRACKET_OPEN) {
+    while (!isEmptyInt(stack) && (logicGate = popInt(&stack)) != BRACKET_OPEN) {
         length += sprintf(expression + length, "%d ", logicGate);
         countTotal++;
     }
     logger("actual expression \"%s\", count conditions %d, count total %d\n", DEBUG, true, expression, countConditions,
            countTotal);
-    exit(42);
     filterConditions = mallocw(sizeof(void *) * countConditions);
     expressionFilter = mallocw(sizeof(int) * countTotal);
     //now expression is post fixed
