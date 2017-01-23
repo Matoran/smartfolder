@@ -16,8 +16,8 @@
 #include "stack.h"
 #include "wrappersyscall.h"
 
-char* getLogicGateName(int val){
-    switch (val){
+char *getLogicGateName(int val) {
+    switch (val) {
         case NOT:
             return "NOT";
         case OR:
@@ -46,27 +46,27 @@ int isLogicGate(const char *string) {
         return OR;
     else if (strcmp(string, "AND") == 0)
         return AND;
-    else if (strcmp(string, "(") == 0)
+    else if (strcmp(string, "[") == 0)
         return BRACKET_OPEN;
-    else if (strcmp(string, ")") == 0)
+    else if (strcmp(string, "]") == 0)
         return BRACKET_CLOSE;
 
     return -1;
 }
 
-bool isWriteable(char *fpath){
+bool isWriteable(char *fpath) {
     struct stat bufstat;
     statw(fpath, &bufstat);
-    if(bufstat.st_mode & S_IWUSR){
+    if (bufstat.st_mode & S_IWUSR) {
         return true;
     }
     return false;
 }
 
-bool isReadable(char *fpath){
+bool isReadable(char *fpath) {
     struct stat bufstat;
     statw(fpath, &bufstat);
-    if(bufstat.st_mode & S_IRUSR){
+    if (bufstat.st_mode & S_IRUSR) {
         return true;
     }
     return false;
@@ -123,13 +123,13 @@ void *parseSize() {
     //unit
     token = strtok(NULL, " ");
     if (strcmp(token, "TB") == 0) {
-        size->number = size->number*1073741824*1024; //pow(1024, 4)
+        size->number = size->number * 1073741824 * 1024; //pow(1024, 4)
     } else if (strcmp(token, "GB") == 0) {
-        size->number = size->number*1073741824; //pow(1024, 3)
+        size->number = size->number * 1073741824; //pow(1024, 3)
     } else if (strcmp(token, "MB") == 0) {
-        size->number = size->number*1048576; //pow(1024, 2)
+        size->number = size->number * 1048576; //pow(1024, 2)
     } else if (strcmp(token, "KB") == 0) {
-        size->number = size->number*1024;
+        size->number = size->number * 1024;
     } else if (token[0] == '-') {
 
     } else {
@@ -172,8 +172,8 @@ void *parseDate() {
 
     //date
     date->date.tm_mday = atoi(token);
-    date->date.tm_mon = atoi(strtok(NULL, "."))-1;
-    date->date.tm_year = atoi(strtok(NULL, " ."))-1900;
+    date->date.tm_mon = atoi(strtok(NULL, ".")) - 1;
+    date->date.tm_year = atoi(strtok(NULL, " .")) - 1900;
 
     return date;
 }
@@ -191,9 +191,9 @@ void *parseOwner() {
     } else {
         owner->type = USER;
     }
-    if(owner->type == USER){
+    if (owner->type == USER) {
         owner->number = getpwnam(token)->pw_uid;
-    }else{
+    } else {
         owner->number = getgrnam(token)->gr_gid;
     }
     return owner;
@@ -211,7 +211,7 @@ void *parsePerm() {
     } else if (strcmp(token, "=") == 0) {
         perm->symbol = EQUAL;
         token = strtok(NULL, " ");
-    }else {
+    } else {
         perm->symbol = PLUS;
     }
     perm->number = strtol(token, NULL, 8);
@@ -220,16 +220,17 @@ void *parsePerm() {
 
 void parser(int argc, char *argv[]) {
     logger("parser begin\n", DEBUG, true);
-    if(mkdir(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1){
-        if(errno != EEXIST){
+    if (mkdir(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1) {
+        if (errno != EEXIST) {
             perror("mkdir destination");
             exit(3);
         }
     }
-    if (isDirectory(argv[1])) {
-        if(isWriteable(argv[1])) {
-            linker_destination = argv[1];
-        }else{
+    logger("destination %s\n", DEBUG, true, argv[1]);
+    linker_destination = realpath(argv[1], NULL);
+    logger("realpath destination %s\n", DEBUG, true, linker_destination);
+    if (isDirectory(linker_destination)) {
+        if (!isWriteable(linker_destination)) {
             logger("no write access to destination\n", ERROR, true);
             exit(4);
         }
@@ -239,7 +240,7 @@ void parser(int argc, char *argv[]) {
     }
 
     if (isDirectory(argv[2])) {
-        if(!isReadable(argv[2])){
+        if (!isReadable(argv[2])) {
             logger("source cannot be read\n", ERROR, true);
             exit(6);
         }
@@ -262,6 +263,7 @@ void parser(int argc, char *argv[]) {
     expression[0] = '\0';
     int length = 0;
     int countTotal = 0, countConditions = 0;
+    bool popAfterCondition = false, condition = false;
     for (int i = 3; i < argc; ++i) {
         if ((logicGate = isLogicGate(argv[i])) >= 0) {
             logger("%s is a logic gate\n", DEBUG, true, argv[i]);
@@ -274,19 +276,28 @@ void parser(int argc, char *argv[]) {
                 }
                 logger("actual expression %s\n", DEBUG, true, expression);
             } else {
+                if (logicGate == NOT && isLogicGate(argv[i + 1]) != BRACKET_OPEN) {
+                    popAfterCondition = true;
+                }
                 logger("%s push in stack\n", DEBUG, true, argv[i]);
                 int *value = mallocw(sizeof(int));
                 *value = logicGate;
                 push(&stack, value);
-
             }
         } else {
-            logger("%s not is a logic gate\n", DEBUG, true, argv[i]);
+            logger("%s is not a logic gate\n", DEBUG, true, argv[i]);
             length += sprintf(expression + length, "%s ", argv[i]);
+
             logger("actual expression %s\n", DEBUG, true, expression);
             if (argv[i][0] == '-') {
                 countTotal++;
                 countConditions++;
+                if (popAfterCondition && condition) {
+                    length += sprintf(expression + length, "%d ", *((int *) pop(&stack)));
+                    popAfterCondition = false;
+                    condition = false;
+                }
+                condition = true;
             }
 
         }
@@ -296,9 +307,11 @@ void parser(int argc, char *argv[]) {
         length += sprintf(expression + length, "%d ", logicGate);
         countTotal++;
     }
-    logger("actual expression \"%s\", count conditions %d, count total %d\n", DEBUG, true, expression, countConditions, countTotal);
-    filterConditions = mallocw(sizeof(void*)*countConditions);
-    expressionFilter = mallocw(sizeof(int)*countTotal);
+    logger("actual expression \"%s\", count conditions %d, count total %d\n", DEBUG, true, expression, countConditions,
+           countTotal);
+    exit(42);
+    filterConditions = mallocw(sizeof(void *) * countConditions);
+    expressionFilter = mallocw(sizeof(int) * countTotal);
     //now expression is post fixed
     char *token = strtok(expression, " ");
     int i = 0;
@@ -310,19 +323,19 @@ void parser(int argc, char *argv[]) {
             int type = conditionType(token);
             switch (type) {
                 case NAMES:
-                    filterConditions[i] =  parseName();
+                    filterConditions[i] = parseName();
                     break;
                 case SIZES:
-                    filterConditions[i] =  parseSize();
+                    filterConditions[i] = parseSize();
                     break;
                 case DATES:
-                    filterConditions[i] =  parseDate();
+                    filterConditions[i] = parseDate();
                     break;
                 case OWNERS:
-                    filterConditions[i] =  parseOwner();
+                    filterConditions[i] = parseOwner();
                     break;
                 case PERMS:
-                    filterConditions[i] =  parsePerm();
+                    filterConditions[i] = parsePerm();
                     break;
                 default:
                     logger("error unknown condition\n", ERROR, true);

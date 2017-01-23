@@ -36,11 +36,13 @@ int exist(const char *linkSource, char *linkDestination){
 }
 
 void zelda(const char *linkSource, const char *filename){
+    logger("linker begin\n", DEBUG, true);
     char *linkDestination = mallocw(sizeof(char)*(strlen(linker_destination)+strlen(filename)+10));
     strcpy(linkDestination, linker_destination);
     strcat(linkDestination, "/");
     strcat(linkDestination, filename);
     strcat(linkDestination, ".sl");
+    logger("default link destination %s\n", DEBUG, true, linkDestination);
     int i = 0;
     bool open = true;
     size_t length = strlen(linkDestination);
@@ -50,15 +52,20 @@ void zelda(const char *linkSource, const char *filename){
         if(valueExist == SYMLINK_EXIST) {
             i++;
             sprintf(&linkDestination[length], "%d", i);
+            logger("name occuped try %s\n", DEBUG, true, linkDestination);
         }else if(valueExist == SYMLINK_NO_EXIST){
             open = false;
+            logger("name %s is ok\n", DEBUG, true, linkDestination);
         }else{
+            logger("file is already linked\n", DEBUG, true);
+            logger("linker end\n", DEBUG, true);
             return;
         }
     }while(open);
 
-    logger("link source %s link destination %s\n", DEBUG,true, linkSource, linkDestination);
+    logger("link source %s link destination %s\n", DEBUG, true, linkSource, linkDestination);
 
     symlinkw(linkSource, linkDestination);
     free(linkDestination);
+    logger("linker end\n", DEBUG, true);
 }

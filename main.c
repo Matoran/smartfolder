@@ -53,11 +53,11 @@ int main(int argc, char *argv[]) {
         //child
         if (value == 0) {
             logger("child started\n", DEBUG, true);
+            char *absolutePath = realpath(argv[2], NULL);
             while (1) {
-                crawler_launcher(argv[2]);
-                logger("crawler ok\n", DEBUG, true);
+                crawler_launcher(absolutePath);
                 checkFiles(linker_destination);
-                logger("check files ok\n", DEBUG, true);
+                logger("\n", DEBUG, false);
                 sleep(1);
             }
         } else {

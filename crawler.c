@@ -40,9 +40,7 @@ static int display_info(const char *fpath, const struct stat *sb, int tflag, str
 }
 
 void crawler_launcher(const char *path) {
-    logger("crawler begin %s %s\n", DEBUG, true, path, getcwd(NULL, 0));
-    char* realPath = realpath(path, NULL);
-    logger("crawler begin realpath %s\n", DEBUG, true, realPath);
-    nftww(realPath, display_info, 20, 0);
+    logger("crawler begin %s\n", DEBUG, true, path);
+    nftww(path, display_info, 20, 0);
     logger("crawler end\n", DEBUG, true);
 }

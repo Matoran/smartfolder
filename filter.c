@@ -115,49 +115,57 @@ void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftw
     createStackBool(&stack);
 
     int j = 0;
-    for (int k = 0; k < size; ++k) {
-        printf("%d ", expressionFilter[k]);
-    }
+    logger("expression: ", DEBUG, true);
     for (int i = 0; i < size; ++i) {
+        logger("%d ", DEBUG, false, expressionFilter[i]);
+        logger(" j=%d", DEBUG, false, j);
         switch (expressionFilter[i]){
             case NOT:
                 pushBool(&stack, !popBool(&stack));
+                logger("(NOT) ", DEBUG, false);
                 break;
             case OR:
                 pushBool(&stack, popBool(&stack) | popBool(&stack));
+                logger("(OR) ", DEBUG, false);
                 break;
             case AND:
                 pushBool(&stack, popBool(&stack) & popBool(&stack));
+                logger("(AND) ", DEBUG, false);
                 break;
             case NAMES:
                 pushBool(&stack, checkName(j, fpath + ftwbuf->base));
+                logger("(NAME) ", DEBUG, false);
                 j++;
                 break;
             case SIZES:
                 pushBool(&stack, checkSize(j, sb->st_size));
+                logger("(SIZE) ", DEBUG, false);
                 j++;
                 break;
             case DATES:
                 pushBool(&stack, checkDate(j, sb));
+                logger("(DATE) ", DEBUG, false);
                 j++;
                 break;
             case OWNERS:
                 pushBool(&stack, checkOwner(j, sb));
+                logger("(OWNER) ", DEBUG, false);
                 j++;
                 break;
             case PERMS:
                 pushBool(&stack, checkPerm(j, sb));
+                logger("(PERM) ", DEBUG, false);
                 j++;
                 break;
             default:
                 logger("error in filter, unknow expression type %d\n", ERROR, true, expressionFilter[i]);
         }
         displayStackBool(stack);
-        printf("\n");
     }
     if(size == 0 || popBool(&stack)){
+        logger("file valid add link\n", DEBUG, true);
         zelda(fpath, fpath + ftwbuf->base);
     }
 
-    logger("crawler end\n", DEBUG, true);
+    logger("filter end\n", DEBUG, true);
 }

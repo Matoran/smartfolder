@@ -67,8 +67,10 @@ bool isEmptyBool(stackBoolS *stack){
 
 void displayStackBool(stackBoolS *stack){
     stackBoolS *temp = stack;
+    logger("stack{", DEBUG, false);
     while(temp != NULL){
-        printf("%d ", temp->value);
+        logger("%d ", DEBUG, false, temp->value);
         temp = temp->next;
     }
+    logger("}\n", DEBUG, false);
 }

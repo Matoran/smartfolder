@@ -7,8 +7,6 @@
 
 #include <stdbool.h>
 
-
-
 typedef struct stackS{
     void *value;
     struct stackS *next;
