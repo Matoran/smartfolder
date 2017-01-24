@@ -1,8 +1,3 @@
-/**
- * @author ISELI Cyril & RODRIGUES Marco
- * @date December 2016 and January 2017
- */
-
 #ifndef SEARCHFOLDER_WRAPPERSYSCALL_H
 #define SEARCHFOLDER_WRAPPERSYSCALL_H
 
@@ -20,7 +15,7 @@ extern void *mallocw(size_t size);
 
 extern void readlinkw(const char *path, char *buf, size_t bufsiz);
 
-extern void symlinkw(const char *path1, const char *path2);
+extern void symlinkw(const char *target, const char *linkpath);
 
 extern void rmdirw(const char *path);
 
