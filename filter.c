@@ -8,10 +8,6 @@
  */
 
 
- /**
-  * Xopen
-  */
-#define _XOPEN_SOURCE 500
 #include <ftw.h>
 #include <stdio.h>
 #include <stdlib.h>

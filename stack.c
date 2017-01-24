@@ -1,14 +1,15 @@
 /**
  * @author ISELI Cyril & RODRIGUES Marco
- * @brief ADD Text
+ * @brief Usable stack of type int or bool
  * @version 0.1
  * @date December 2016 and January 2017
  * @file stack.c
  *
- * ADD text
+ * A simple stack with push pop isEmpty head with 2 types int or bool
  */
 #include "stack.h"
 #include "logger.h"
+#include "wrappersyscall.h"
 
 void pushInt(stackIntS **stack, int value){
     stackIntS *element = mallocw(sizeof(stackIntS));

@@ -1,6 +1,6 @@
 /**
- * \author ISELI Cyril & RODRIGUES Marco
- * \date December 2016 and January 2017
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @date December 2016 and January 2017
  */
 
 #ifndef SEARCHFOLDER_CRAWLER_H

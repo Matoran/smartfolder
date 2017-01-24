@@ -1,10 +1,12 @@
 /**
- * \author ISELI Cyril & RODRIGUES Marco
- * \brief ADD Text
- * \version 0.1
- * \date December 2016 and January 2017
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @brief Display formatted logs in stderr
+ * @version 0.1
+ * @date December 2016 and January 2017
+ * @file logger.c
  *
- * ADD text
+ * Display logs with datetime, with levels: LOG, DEBUG, ERROR
+ * Use format like printf and variable args
  */
 
 #include "logger.h"

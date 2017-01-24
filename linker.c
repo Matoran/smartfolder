@@ -1,8 +1,9 @@
 /**
- * \author ISELI Cyril & RODRIGUES Marco
- * \brief Create the symlink
- * \version 0.1
- * \date December 2016 and January 2017
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @brief Create the symlink
+ * @version 0.1
+ * @date December 2016 and January 2017
+ * @file linker.c
  *
  * Will create the symlink in the smartfolder with
  * the file received from the filter. If any

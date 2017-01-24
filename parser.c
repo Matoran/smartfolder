@@ -1,10 +1,12 @@
 /**
- * \author ISELI Cyril & RODRIGUES Marco
- * \brief ADD Text
- * \version 0.1
- * \date December 2016 and January 2017
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @brief Parse the programs args
+ * @version 0.1
+ * @date December 2016 and January 2017
+ * @file parser.c
  *
- * ADD text
+ * Parse args, test if the directories are valid, set the linker destination
+ * and parse infixe to postfix expression
  */
 
 #include <sys/stat.h>
@@ -97,6 +99,10 @@ int conditionType(const char *string) {
     return -1;
 }
 
+/**
+ * create nameS, parse the expression and fill nameS
+ * @return filled nameS
+ */
 void *parseName() {
     nameS *name = mallocw(sizeof(nameS));
     char *token = strtok(NULL, " ");
@@ -113,6 +119,10 @@ void *parseName() {
     return name;
 }
 
+/**
+ * create sizeS, parse the expression and fill sizeS
+ * @return filled sizeS
+ */
 void *parseSize() {
     sizeS *size = mallocw(sizeof(sizeS));
     //symbol (+, -, =)
@@ -150,6 +160,10 @@ void *parseSize() {
     return size;
 }
 
+/**
+ * create dateS, parse the expression and fill dateS
+ * @return filled dateS
+ */
 void *parseDate() {
     dateS *date = mallocw(sizeof(dateS));
     //type
@@ -189,6 +203,10 @@ void *parseDate() {
     return date;
 }
 
+/**
+ * create ownerS, parse the expression and fill ownerS
+ * @return filled ownerS
+ */
 void *parseOwner() {
     ownerS *owner = mallocw(sizeof(ownerS));
 

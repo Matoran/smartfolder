@@ -1,13 +1,14 @@
 /**
- * \author ISELI Cyril & RODRIGUES Marco
- * \brief ADD Text
- * \version 0.1
- * \date December 2016 and January 2017
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @brief find all files and call the filter for each file
+ * @version 0.1
+ * @date December 2016 and January 2017
+ * @file crawler.c
  *
- * ADD text
+ * walks through the directory tree that is located under the directory path
+ * call the filter for each file found
+ *
  */
-#define _XOPEN_SOURCE 500
-#include <ftw.h>
 #include "crawler.h"
 #include "logger.h"
 #include "filter.h"

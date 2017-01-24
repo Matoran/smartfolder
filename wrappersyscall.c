@@ -1,18 +1,18 @@
 /**
- * \author ISELI Cyril & RODRIGUES Marco
- * \brief ADD Text
- * \version 0.1
- * \date December 2016 and January 2017
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @brief Wrapper of all system functions that can fail
+ * @version 0.1
+ * @date December 2016 and January 2017
+ * @file wrappersyscall.c
  *
- * ADD text
+ * Wrap every syscall that can fail, in general call perror and exit
  */
 
-#define _XOPEN_SOURCE 500
-#include <ftw.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <signal.h>
+#include <ftw.h>
 #include "wrappersyscall.h"
 
 
