@@ -46,7 +46,7 @@ void logger(const char *format, int type, bool begin, ...){
 void savePID(const char *name, pid_t pid){
     char stringPID[12];
 
-    char *fullName = malloc(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+1));
+    char *fullName = mallocw(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+1));
     strcpy(fullName, "/tmp/smartfolder/");
     mkdirw(fullName, S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     strcat(fullName, basename(name));
@@ -74,7 +74,7 @@ pid_t readPID(const char *name){
 
 
 void savePath(const char *name, const char *realpath) {
-    char *fullName = malloc(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+strlen("path")+1));
+    char *fullName = mallocw(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+strlen("path")+1));
     strcpy(fullName, "/tmp/smartfolder/");
     strcat(fullName, basename(name));
     strcat(fullName, "path");

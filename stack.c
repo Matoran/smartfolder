@@ -1,18 +1,17 @@
 /**
- * \author ISELI Cyril & RODRIGUES Marco
- * \brief ADD Text
- * \version 0.1
- * \date December 2016 and January 2017
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @brief ADD Text
+ * @version 0.1
+ * @date December 2016 and January 2017
+ * @file stack.c
  *
  * ADD text
  */
-#include <stdlib.h>
 #include "stack.h"
 #include "logger.h"
-#include <stdio.h>
 
 void pushInt(stackIntS **stack, int value){
-    stackIntS *element = malloc(sizeof(stackIntS));
+    stackIntS *element = mallocw(sizeof(stackIntS));
     element->next = *stack;
     element->value = value;
     *stack = element;
@@ -47,7 +46,7 @@ bool isEmptyInt(stackIntS *stack){
 }
 
 void pushBool(stackBoolS **stack, bool value){
-    stackBoolS *element = malloc(sizeof(stackBoolS));
+    stackBoolS *element = mallocw(sizeof(stackBoolS));
     element->next = *stack;
     element->value = value;
     *stack = element;

@@ -6,14 +6,15 @@
  *
  * ADD text
  */
-#define _GNU_SOURCE
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <memory.h>
 #include <ctype.h>
+#include <ftw.h>
 #include "destroyer.h"
 #include "wrappersyscall.h"
 #include "logger.h"

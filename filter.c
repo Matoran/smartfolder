@@ -1,8 +1,8 @@
-/**
- * \author ISELI Cyril & RODRIGUES Marco
- * \brief Filter a file
- * \version 0.1
- * \date December 2016 and January 2017
+/** @brief Filter a file
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @version 0.1
+ * @date December 2016 and January 2017
+ * @file filter.c
  *
  * Filter a file with the parameters in command line.
  */

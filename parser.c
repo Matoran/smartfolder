@@ -151,7 +151,7 @@ void *parseSize() {
 }
 
 void *parseDate() {
-    dateS *date = malloc(sizeof(dateS));
+    dateS *date = mallocw(sizeof(dateS));
     //type
     char *token = strtok(NULL, " .");
     if (strcmp(token, "status") == 0) {
@@ -190,7 +190,7 @@ void *parseDate() {
 }
 
 void *parseOwner() {
-    ownerS *owner = malloc(sizeof(ownerS));
+    ownerS *owner = mallocw(sizeof(ownerS));
 
     char *token = strtok(NULL, " ");
     if (strcmp(token, "group") == 0) {

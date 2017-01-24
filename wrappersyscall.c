@@ -6,19 +6,14 @@
  *
  * ADD text
  */
+
 #define _XOPEN_SOURCE 500
-#include <time.h>
-#include <sys/stat.h>
-#include <zconf.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <ftw.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <signal.h>
 #include "wrappersyscall.h"
-#include "logger.h"
 
 
 pid_t forkw() {
