@@ -70,8 +70,6 @@ bool checkSize(int pos, off_t size){
 bool checkDate(int pos, const struct stat *sb){
     dateS *condition = ((dateS*)filterConditions[pos]);
     time_t time;
-    time_t timeCondition = mktime(&condition->date);
-
     switch (condition->type){
         case STATUS:
             time = sb->st_ctime;
@@ -89,11 +87,15 @@ bool checkDate(int pos, const struct stat *sb){
 
     switch (condition->symbol){
         case PLUS:
-            return time > timeCondition;
+            logger("time %d > condition %d\n", DEBUG, true, time, condition->timestamp + ONE_DAY);
+            return time > condition->timestamp + ONE_DAY;
         case MINUS:
-            return time < timeCondition;
+            logger("time %d < condition %d\n", DEBUG, true, time, condition->timestamp);
+            return time < condition->timestamp;
         case EQUAL:
-            return time == timeCondition;
+            logger("time %d >= condition %d and < %d\n", DEBUG, true, time, condition->timestamp,
+                   condition->timestamp + ONE_DAY);
+            return time >= condition->timestamp && time < condition->timestamp + ONE_DAY;
         default:
             logger("checkDate error condition symbol unknow %d\n", ERROR, true, condition->symbol);
             exit(1);

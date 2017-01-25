@@ -17,6 +17,7 @@
 #define MODIFIED 2
 #define USER 0
 #define GROUP 1
+#define ONE_DAY (60*60*24)
 
 #include <ftw.h>
 #include <stdlib.h>
@@ -43,7 +44,7 @@ typedef struct sizeS{
 typedef struct dateS{
     int type;
     int symbol;
-    struct tm date;
+    time_t timestamp;
 }dateS;
 
 /**

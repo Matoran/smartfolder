@@ -201,19 +201,20 @@ static void *parseSize() {
  */
 static void *parseDate() {
     dateS *date = mallocw(sizeof(dateS));
+
     //type
     char *token = strtok(NULL, " .");
     if (strcmp(token, "status") == 0) {
-        date->symbol = STATUS;
+        date->type = STATUS;
         token = strtok(NULL, " .");
     } else if (strcmp(token, "modified") == 0) {
-        date->symbol = MODIFIED;
+        date->type = MODIFIED;
         token = strtok(NULL, " .");
     } else if (strcmp(token, "accessed") == 0) {
-        date->symbol = ACCESSED;
+        date->type = ACCESSED;
         token = strtok(NULL, " .");
     } else {
-        date->symbol = ACCESSED;
+        date->type = ACCESSED;
     }
 
     //symbol
@@ -232,9 +233,11 @@ static void *parseDate() {
 
     //TODO test date correctly
     //date
-    date->date.tm_mday = atoi(token);
-    date->date.tm_mon = atoi(strtok(NULL, ".")) - 1;
-    date->date.tm_year = atoi(strtok(NULL, " .")) - 1900;
+    struct tm dateargs = {0};
+    dateargs.tm_mday = atoi(token);
+    dateargs.tm_mon = atoi(strtok(NULL, ".")) - 1;
+    dateargs.tm_year = atoi(strtok(NULL, " .")) - 1900;
+    date->timestamp = mktime(&dateargs);
     return date;
 }
 
