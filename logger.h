@@ -15,9 +15,21 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+/**
+ * if is a log
+ */
 #define LOG 1
+/**
+ * if is a debug
+ */
 #define DEBUG 2
+/**
+ * if is an error
+ */
 #define ERROR 4
+/**
+ * level
+ */
 #define LEVEL (LOG | ERROR)
 
 extern void logger(const char *format, int type, bool begin, ...);

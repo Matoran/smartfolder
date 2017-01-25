@@ -9,13 +9,37 @@
 
 #ifndef SEARCHFOLDER_FILTER_H
 #define SEARCHFOLDER_FILTER_H
+/**
+ * It's >
+ */
 #define PLUS 0
+/**
+ * It's <
+ */
 #define MINUS 1
+/**
+ * It's =
+ */
 #define EQUAL 2
+/**
+ * Date mode status
+ */
 #define STATUS 0
+/**
+ * Date mode accessed
+ */
 #define ACCESSED 1
+/**
+ * Date mode modifier
+ */
 #define MODIFIED 2
+/**
+ * If user
+ */
 #define USER 0
+/**
+ * If group
+ */
 #define GROUP 1
 
 #include <ftw.h>
