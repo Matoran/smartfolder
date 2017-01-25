@@ -23,6 +23,11 @@
 #include "logger.h"
 #include "wrappersyscall.h"
 
+/**
+ * Check if is a symlink
+ * @param name file
+ * @return int 1 if is valid
+ */
 int scanFilter(const struct dirent *name) {
     if (name->d_type == DT_LNK) {
         return 1;
@@ -30,6 +35,11 @@ int scanFilter(const struct dirent *name) {
     return 0;
 }
 
+/**
+ * Get the number at the end of file.
+ * @param string filename of symlink
+ * @return int the number of file
+ */
 int getInt(const char *string) {
     size_t length = strlen(string);
     int i = 0;
@@ -45,6 +55,14 @@ int getInt(const char *string) {
     }
 }
 
+/**
+ * Remove symlink or directory.
+ * @param fpath path of the file
+ * @param sb stat of the file
+ * @param tflag flag of the file
+ * @param ftwbuf
+ * @return int 0 for continue nftw
+ */
 static int removeLink(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf) {
     if (tflag != FTW_DP) {
         unlinkw(fpath);
@@ -54,10 +72,20 @@ static int removeLink(const char *fpath, const struct stat *sb, int tflag, struc
     return 0;
 }
 
+/**
+ * Walks through the directory and remove all the symlink.
+ * of searchfolder.
+ * @param path path of searchfolder
+ */
 void destroy(char *path) {
     nftww(path, removeLink, 64, FTW_DEPTH | FTW_PHYS);
 }
 
+/**
+ * Check if the file of symlink is alive
+ * @param fpath path of the synlink
+ * @return int 1 if is valid
+ */
 static int stillAlive(const char *fpath) {
     logger("path %s\n", DEBUG, true, fpath);
     struct stat sb;
@@ -70,6 +98,11 @@ static int stillAlive(const char *fpath) {
     return stat(linkname, &sb);
 }
 
+/**
+ * Check all symlinks in path and if the symlink is not live
+ * delete him.
+ * @param path path of the smartfolder
+ */
 void checkFiles(const char *path) {
     logger("check files begin %s\n", DEBUG, true, path);
     struct dirent **namelist;

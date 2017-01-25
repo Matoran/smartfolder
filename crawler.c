@@ -5,7 +5,7 @@
  * @date December 2016 and January 2017
  * @file crawler.c
  *
- * walks through the directory tree that is located under the directory path
+ * Walks through the directory tree that is located under the directory path
  * call the filter for each file found
  *
  */
@@ -32,7 +32,14 @@ FTW_SL fpath is a symbolic link, and FTW_PHYS was set in flags.
 FTW_SLN fpath  is a symbolic link pointing to a nonexistent file.  (This occurs only if FTW_PHYS is not set.)
 */
 
-
+/**
+ * Check if the fpath is a file. And send it to the filter.
+ * @param fpath path of the file
+ * @param sb stat of the file
+ * @param tflag flag of the file
+ * @param ftwbuf
+ * @return
+ */
 static int display_info(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf) {
     //is a file
     if(tflag == FTW_F){
@@ -42,6 +49,10 @@ static int display_info(const char *fpath, const struct stat *sb, int tflag, str
     return 0;           /* To tell nftw() to continue */
 }
 
+/**
+ * Start the function nftw.
+ * @param path path where we search the file
+ */
 void crawler_launcher(const char *path) {
     logger("crawler begin %s\n", DEBUG, true, path);
     nftww(path, display_info, 20, 0);
