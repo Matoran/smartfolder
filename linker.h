@@ -28,6 +28,9 @@
  */
 #define SYMLINK_NO_EXIST 2
 
+/**
+ * link of the smartfolder
+ */
 char* linker_destination;
 void zelda(const char *linkSource, const char *filename);
 #endif //SEARCHFOLDER_LINKER_H
