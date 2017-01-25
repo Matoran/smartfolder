@@ -88,7 +88,7 @@ bool checkDate(int pos, const struct stat *sb){
     switch (condition->symbol){
         case PLUS:
             logger("time %d > condition %d\n", DEBUG, true, time, condition->timestamp + ONE_DAY);
-            return time > condition->timestamp + ONE_DAY;
+            return time >= condition->timestamp + ONE_DAY;
         case MINUS:
             logger("time %d < condition %d\n", DEBUG, true, time, condition->timestamp);
             return time < condition->timestamp;
@@ -132,9 +132,9 @@ bool checkPerm(int pos, const struct stat *sb){
     int perms = sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
     switch (condition->symbol){
         case PLUS:
-            return perms > condition->number;
+            return perms >= condition->number;
         case MINUS:
-            return perms < condition->number;
+            return (perms & condition->number) > 0;
         case EQUAL:
             return perms == condition->number;
         default:
