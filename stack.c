@@ -11,6 +11,11 @@
 #include "logger.h"
 #include "wrappersyscall.h"
 
+/**
+ * add int to the stack
+ * @param stack
+ * @param value
+ */
 void pushInt(stackIntS **stack, int value){
     stackIntS *element = mallocw(sizeof(stackIntS));
     element->next = *stack;
@@ -19,7 +24,11 @@ void pushInt(stackIntS **stack, int value){
 }
 
 
-
+/**
+ * return the head of the stack and remove it
+ * @param stack
+ * @return int stack head
+ */
 int popInt(stackIntS **stack){
     if(isEmptyInt(*stack)){
         logger("stack error: empty stack and pop\n", ERROR, true);
@@ -32,6 +41,11 @@ int popInt(stackIntS **stack){
     }
 }
 
+/**
+ * give the value of the head
+ * @param stack
+ * @return stack head
+ */
 int headInt(stackIntS **stack){
     if(isEmptyInt(*stack)){
         logger("stack error: empty stack and pop\n", ERROR, true);
@@ -40,12 +54,20 @@ int headInt(stackIntS **stack){
     }
 }
 
-
-
+/**
+ * check if the stack is empty
+ * @param stack
+ * @return true or false
+ */
 bool isEmptyInt(stackIntS *stack){
     return stack == NULL;
 }
 
+/**
+ * add bool to the stack
+ * @param stack
+ * @param value
+ */
 void pushBool(stackBoolS **stack, bool value){
     stackBoolS *element = mallocw(sizeof(stackBoolS));
     element->next = *stack;
@@ -53,6 +75,11 @@ void pushBool(stackBoolS **stack, bool value){
     *stack = element;
 }
 
+/**
+ * return the head of the stack and remove it
+ * @param stack
+ * @return bool stack head
+ */
 bool popBool(stackBoolS **stack){
     if(isEmptyBool(*stack)){
         logger("stack error: empty stack and pop\n", ERROR, true);
@@ -65,10 +92,19 @@ bool popBool(stackBoolS **stack){
     }
 }
 
+/**
+ * check if the stack is empty
+ * @param stack
+ * @return true or false
+ */
 bool isEmptyBool(stackBoolS *stack){
     return stack == NULL;
 }
 
+/**
+ * display the stack
+ * @param stack
+ */
 void displayStackBool(stackBoolS *stack){
     stackBoolS *temp = stack;
     logger("stack{", DEBUG, false);

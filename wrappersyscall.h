@@ -1,3 +1,13 @@
+/**
+ * @author ISELI Cyril & RODRIGUES Marco
+ * @brief Wrapper of all system functions that can fail
+ * @version 0.1
+ * @date December 2016 and January 2017
+ * @file wrappersyscall.h
+ *
+ * Wrap every syscall that can fail, in general call perror and exit on error
+ */
+
 #ifndef SEARCHFOLDER_WRAPPERSYSCALL_H
 #define SEARCHFOLDER_WRAPPERSYSCALL_H
 

@@ -1,6 +1,12 @@
 /**
  * @author ISELI Cyril & RODRIGUES Marco
+ * @brief Parse the programs args
+ * @version 0.1
  * @date December 2016 and January 2017
+ * @file parser.h
+ *
+ * Parse args, test if the directories are valid, set the linker destination
+ * and parse infixe to postfix expression
  */
 
 #ifndef SEARCHFOLDER_PARSER_H

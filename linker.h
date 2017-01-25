@@ -1,7 +1,17 @@
 /**
  * @author ISELI Cyril & RODRIGUES Marco
+ * @brief Create the symlink
+ * @version 0.1
  * @date December 2016 and January 2017
+ * @file linker.h
+ *
+ * Will create the symlink in the smartfolder with
+ * the file received from the filter. If any
+ * file have the same name, we add a number in the
+ * end of file.
+ *
  */
+
 #ifndef SEARCHFOLDER_LINKER_H
 #define SEARCHFOLDER_LINKER_H
 

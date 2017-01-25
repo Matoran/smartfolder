@@ -22,6 +22,11 @@
 #include <libgen.h>
 #include <stdbool.h>
 
+/**
+ * write in filename the message
+ * @param filename path of the file
+ * @param message a string
+ */
 void writeInFile(const char *filename, const char *message){
     FILE *fp;
     fp = fopen(filename, "w");
@@ -30,6 +35,13 @@ void writeInFile(const char *filename, const char *message){
     fclose(fp);
 }
 
+/**
+ * logger display in stderr, work like printf
+ * @param format format of the display
+ * @param type of the log defined in the header
+ * @param begin if it's a new line
+ * @param ... variable params like printf
+ */
 void logger(const char *format, int type, bool begin, ...){
     if(LEVEL & type){
         va_list args;
@@ -45,10 +57,15 @@ void logger(const char *format, int type, bool begin, ...){
     }
 }
 
+/**
+ * save child PID to file in /tmp/smartfolder/{name of the smartfolder}
+ * @param name of the smartfolder
+ * @param pid of the smartfolder
+ */
 void savePID(const char *name, pid_t pid){
     char stringPID[12];
 
-    char *fullName = mallocw(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+1));
+    char *fullName = mallocw(sizeof(char) * (strlen(basename(name)) + strlen("/tmp/smartfolder/") + 1));
     strcpy(fullName, "/tmp/smartfolder/");
     mkdirw(fullName, S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     strcat(fullName, basename(name));
@@ -56,8 +73,14 @@ void savePID(const char *name, pid_t pid){
     writeInFile(fullName, stringPID);
 }
 
+/**
+ * read PID wich have name as name
+ * if the file doesn't exist the smartfolder also
+ * @param name the name of the smartfolder
+ * @return pid_t the pid
+ */
 pid_t readPID(const char *name){
-    char *fullName = mallocw(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+1));
+    char *fullName = mallocw(sizeof(char) * (strlen(name) + strlen("/tmp/smartfolder/") + 1));
     strcpy(fullName, "/tmp/smartfolder/");
     strcat(fullName, name);
     FILE *fp;
@@ -74,7 +97,11 @@ pid_t readPID(const char *name){
     }
 }
 
-
+/**
+ * save the absolute path of the smartfolder in /tmp/smartfolder/{name of the smartfolder}path
+ * @param name the smartfolder name
+ * @param realpath the absolute path of the smartfolder
+ */
 void savePath(const char *name, const char *realpath) {
     char *fullName = mallocw(sizeof(char)*(strlen(basename(name))+strlen("/tmp/smartfolder/")+strlen("path")+1));
     strcpy(fullName, "/tmp/smartfolder/");
@@ -83,8 +110,14 @@ void savePath(const char *name, const char *realpath) {
     writeInFile(fullName, realpath);
 }
 
+/**
+ * read path from /tmp/smartfolder/{name of the smartfolder}path
+ * if the file doesn't exist the exit
+ * @param name of the smartfolder
+ * @return the path
+ */
 char* readPath(const char *name){
-    char *fullName = mallocw(sizeof(char)*(strlen(name)+strlen("/tmp/smartfolder/")+strlen("path")+1));
+    char *fullName = mallocw(sizeof(char) * (strlen(name) + strlen("/tmp/smartfolder/") + strlen("path") + 1));
     strcpy(fullName, "/tmp/smartfolder/");
     strcat(fullName, name);
     strcat(fullName, "path");
@@ -95,7 +128,7 @@ char* readPath(const char *name){
         size_t len = 0;
         len = getline(&line, &len, fp);
         fclose(fp);
-        line[len-1] = '\0';
+        line[len - 1] = '\0';
         remove(fullName);
         return line;
     }else{
@@ -103,4 +136,3 @@ char* readPath(const char *name){
         exit(3);
     }
 }
-

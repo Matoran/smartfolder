@@ -30,7 +30,7 @@
  *              SAME_SYMLINK if the symlink is the same as another
  *              SYMLINK_EXIST if the filename is same as another but not the symlink
  */
-int exist(const char *linkSource, char *linkDestination){
+static int exist(const char *linkSource, char *linkDestination) {
     struct stat sb;
     char *linkname;
 

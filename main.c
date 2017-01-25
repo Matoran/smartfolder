@@ -19,16 +19,16 @@
 #include "linker.h"
 
 /**
- *
- * @param argc
- * @param argv
- * @return
+ * entry point of the program
+ * @param argc number of arguments
+ * @param argv array of string
+ * @return EXIT_SUCCESS or EXIT_FAILURE
  */
 int main(int argc, char *argv[]) {
     if (argc < 3) {
         printf("usage: smartfolder -d dir_name\n");
         printf("usage: smartfolder dir_name search_path [expression]\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
     logger("smartfolder launched\n", LOG, true);
     logger("smartfolder params:", LOG, true);
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
         logger("smartfolder -d\n", DEBUG, true);
         if (argc != 3) {
             printf("usage: smartfolder -d dir_name\n");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
         logger("kill smartfolder with name: %s\n", DEBUG, true, argv[2]);
         pid_t pid = readPID(argv[2]);

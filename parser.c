@@ -23,13 +23,23 @@
 #include "stack.h"
 #include "wrappersyscall.h"
 
-bool isQuoted(const char *string) {
+/**
+ * check if the string is quoted by %%
+ * @param string
+ * @return true or false
+ */
+static bool isQuoted(const char *string) {
     if (string[0] == '%' && string[strlen(string) - 1] == '%')
         return true;
     return false;
 }
 
-char *getLogicGateName(int val) {
+/**
+ * convert int to the associated string
+ * @param val
+ * @return char* readable for humans
+ */
+static char *getLogicGateName(int val) {
     switch (val) {
         case NOT:
             return "NOT";
@@ -46,13 +56,23 @@ char *getLogicGateName(int val) {
     }
 }
 
+/**
+ * check if the path is a directory
+ * @param path
+ * @return int positive if true, 0 if false
+ */
 static int isDirectory(const char *path) {
     struct stat statbuf;
     statw(path, &statbuf);
     return S_ISDIR(statbuf.st_mode);
 }
 
-int isLogicGate(const char *string) {
+/**
+ * test if the string is a logic gate then return the type of the logic gate
+ * @param string
+ * @return return int value defined in the header or -1 if not a gate
+ */
+static int isLogicGate(const char *string) {
     if (strcmp(string, "NOT") == 0)
         return NOT;
     else if (strcmp(string, "OR") == 0)
@@ -67,7 +87,12 @@ int isLogicGate(const char *string) {
     return -1;
 }
 
-bool isWriteable(char *fpath) {
+/**
+ * test if the directory is writeable
+ * @param fpath
+ * @return bool
+ */
+static bool isWriteable(char *fpath) {
     struct stat bufstat;
     statw(fpath, &bufstat);
     if (bufstat.st_mode & S_IWUSR) {
@@ -76,7 +101,12 @@ bool isWriteable(char *fpath) {
     return false;
 }
 
-bool isReadable(char *fpath) {
+/**
+ * test if the directory is readable
+ * @param fpath
+ * @return bool
+ */
+static bool isReadable(char *fpath) {
     struct stat bufstat;
     statw(fpath, &bufstat);
     if (bufstat.st_mode & S_IRUSR) {
@@ -85,7 +115,12 @@ bool isReadable(char *fpath) {
     return false;
 }
 
-int conditionType(const char *string) {
+/**
+ * test if the string is a condition then return the type
+ * @param string
+ * @return int defined in the header or -1 if nota condition type
+ */
+static int conditionType(const char *string) {
     if (strcmp(string, "-name") == 0)
         return NAMES;
     else if (strcmp(string, "-size") == 0)
@@ -103,7 +138,7 @@ int conditionType(const char *string) {
  * create nameS, parse the expression and fill nameS
  * @return filled nameS
  */
-void *parseName() {
+static void *parseName() {
     nameS *name = mallocw(sizeof(nameS));
     char *token = strtok(NULL, " ");
     if (strcmp(token, "-") == 0) {
@@ -123,7 +158,7 @@ void *parseName() {
  * create sizeS, parse the expression and fill sizeS
  * @return filled sizeS
  */
-void *parseSize() {
+static void *parseSize() {
     sizeS *size = mallocw(sizeof(sizeS));
     //symbol (+, -, =)
     char *token = strtok(NULL, " ");
@@ -164,7 +199,7 @@ void *parseSize() {
  * create dateS, parse the expression and fill dateS
  * @return filled dateS
  */
-void *parseDate() {
+static void *parseDate() {
     dateS *date = mallocw(sizeof(dateS));
     //type
     char *token = strtok(NULL, " .");
@@ -195,11 +230,11 @@ void *parseDate() {
         date->symbol = EQUAL;
     }
 
+    //TODO test date correctly
     //date
     date->date.tm_mday = atoi(token);
     date->date.tm_mon = atoi(strtok(NULL, ".")) - 1;
     date->date.tm_year = atoi(strtok(NULL, " .")) - 1900;
-
     return date;
 }
 
@@ -207,7 +242,7 @@ void *parseDate() {
  * create ownerS, parse the expression and fill ownerS
  * @return filled ownerS
  */
-void *parseOwner() {
+static void *parseOwner() {
     ownerS *owner = mallocw(sizeof(ownerS));
 
     char *token = strtok(NULL, " ");
@@ -228,7 +263,11 @@ void *parseOwner() {
     return owner;
 }
 
-void *parsePerm() {
+/**
+ * create permS, parse the expression and fill permS
+ * @return filled permS
+ */
+static void *parsePerm() {
     permS *perm = mallocw(sizeof(permS));
     char *token = strtok(NULL, " ");
     if (strcmp(token, "+") == 0) {
@@ -247,6 +286,12 @@ void *parsePerm() {
     return perm;
 }
 
+/**
+ * parse received args, convert infix to postfix expression,
+ * create simplified expression and create filter conditions
+ * @param argc number of arguments
+ * @param argv array of string
+ */
 void parser(int argc, char *argv[]) {
     logger("parser begin\n", DEBUG, true);
     if (mkdir(argv[1], S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1) {
