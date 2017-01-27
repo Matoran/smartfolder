@@ -16,7 +16,7 @@
  * @param stack
  * @param value
  */
-void pushInt(stackIntS **stack, int value){
+void pushInt(stackIntS **stack, int value) {
     stackIntS *element = mallocw(sizeof(stackIntS));
     element->next = *stack;
     element->value = value;
@@ -29,11 +29,11 @@ void pushInt(stackIntS **stack, int value){
  * @param stack
  * @return int stack head
  */
-int popInt(stackIntS **stack){
-    if(isEmptyInt(*stack)){
+int popInt(stackIntS **stack) {
+    if (isEmptyInt(*stack)) {
         logger("stack error: empty stack and pop\n", ERROR, true);
         exit(EXIT_FAILURE);
-    }else{
+    } else {
         int nb = (*stack)->value;
         stackIntS *temp = *stack;
         *stack = (*stack)->next;
@@ -47,11 +47,11 @@ int popInt(stackIntS **stack){
  * @param stack
  * @return stack head
  */
-int headInt(stackIntS **stack){
-    if(isEmptyInt(*stack)){
+int headInt(stackIntS **stack) {
+    if (isEmptyInt(*stack)) {
         logger("stack error: empty stack and pop\n", ERROR, true);
         exit(EXIT_FAILURE);
-    }else{
+    } else {
         return (*stack)->value;
     }
 }
@@ -61,7 +61,7 @@ int headInt(stackIntS **stack){
  * @param stack
  * @return true or false
  */
-bool isEmptyInt(stackIntS *stack){
+bool isEmptyInt(stackIntS *stack) {
     return stack == NULL;
 }
 
@@ -70,7 +70,7 @@ bool isEmptyInt(stackIntS *stack){
  * @param stack
  * @param value
  */
-void pushBool(stackBoolS **stack, bool value){
+void pushBool(stackBoolS **stack, bool value) {
     stackBoolS *element = mallocw(sizeof(stackBoolS));
     element->next = *stack;
     element->value = value;
@@ -82,11 +82,11 @@ void pushBool(stackBoolS **stack, bool value){
  * @param stack
  * @return bool stack head
  */
-bool popBool(stackBoolS **stack){
-    if(isEmptyBool(*stack)){
+bool popBool(stackBoolS **stack) {
+    if (isEmptyBool(*stack)) {
         logger("stack error: empty stack and pop\n", ERROR, true);
         exit(EXIT_FAILURE);
-    }else{
+    } else {
         bool boolean = (*stack)->value;
         stackBoolS *temp = *stack;
         *stack = (*stack)->next;
@@ -100,7 +100,7 @@ bool popBool(stackBoolS **stack){
  * @param stack
  * @return true or false
  */
-bool isEmptyBool(stackBoolS *stack){
+bool isEmptyBool(stackBoolS *stack) {
     return stack == NULL;
 }
 
@@ -108,10 +108,10 @@ bool isEmptyBool(stackBoolS *stack){
  * display the stack
  * @param stack
  */
-void displayStackBool(stackBoolS *stack){
+void displayStackBool(stackBoolS *stack) {
     stackBoolS *temp = stack;
     logger("stack{", DEBUG, false);
-    while(temp != NULL){
+    while (temp != NULL) {
         logger("%d ", DEBUG, false, temp->value);
         temp = temp->next;
     }

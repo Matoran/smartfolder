@@ -54,10 +54,10 @@
  * symbol is +(bigger than) -(smaller than) =(equal)
  * number is the size
  */
-typedef struct sizeS{
+typedef struct sizeS {
     int symbol;
     long long number;
-}sizeS;
+} sizeS;
 
 /**
  * contain a condition about date
@@ -65,40 +65,40 @@ typedef struct sizeS{
  * symbol is +(bigger than) -(smaller than) =(equal)
  * date tm struct that contain the date
  */
-typedef struct dateS{
+typedef struct dateS {
     int type;
     int symbol;
     time_t timestamp;
-}dateS;
+} dateS;
 
 /**
  * contain a condition about owner
  * type group or user
  * number gid or uid
  */
-typedef struct ownerS{
+typedef struct ownerS {
     int type;
     unsigned int number;
-}ownerS;
+} ownerS;
 
 /**
  * contain a condition about perms
  * symbol is +(bigger than) -(smaller than) =(equal)
  * number the octal code
  */
-typedef struct permS{
+typedef struct permS {
     int symbol;
     unsigned int number;
-}permS;
+} permS;
 
 /**
  * contain a condition about name
  * exactName if we search complete string or partial
  */
-typedef struct nameS{
+typedef struct nameS {
     bool exactName;
     char *string;
-}nameS;
+} nameS;
 
 /**
  * contain all conditions generic table
@@ -115,7 +115,8 @@ int *expressionFilter;
  */
 int size;
 
-void initFilter();
-void filter(const char *fpath, const struct stat *sb, struct FTW *ftwbuf);
+extern void initFilter();
+
+extern void filter(const char *fpath, const struct stat *sb, struct FTW *ftwbuf);
 
 #endif //SEARCHFOLDER_FILTER_H

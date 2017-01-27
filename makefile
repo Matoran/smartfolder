@@ -1,6 +1,6 @@
 # Variables Definition
 version = gcc -std=gnu99
-CFLAGS = -g -Wall -Wextra -D_GNU_SOURCE -D_XOPEN_SOURCE
+CFLAGS = -D_GNU_SOURCE
 # Main compilation
 searchfolder : main.o crawler.o destroyer.o filter.o linker.o logger.o parser.o stack.o wrappersyscall.o
 	$(version) $^ -o $@

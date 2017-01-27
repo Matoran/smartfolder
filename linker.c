@@ -34,14 +34,14 @@ static int exist(const char *linkSource, char *linkDestination) {
     struct stat sb;
     char *linkname;
 
-    if(lstat(linkDestination, &sb) == -1){
+    if (lstat(linkDestination, &sb) == -1) {
         return SYMLINK_NO_EXIST;
     }
     linkname = mallocw(sb.st_size + 1);
     readlinkw(linkDestination, linkname, sb.st_size + 1);
     linkname[sb.st_size] = '\0';
 
-    if(strcmp(linkSource,linkname) == 0){
+    if (strcmp(linkSource, linkname) == 0) {
         free(linkname);
         return SAME_SYMLINK;
     }
@@ -55,9 +55,9 @@ static int exist(const char *linkSource, char *linkDestination) {
  * @param linkSource path of filtered file
  * @param filename name of filtered file
  */
-void zelda(const char *linkSource, const char *filename){
+void zelda(const char *linkSource, const char *filename) {
     logger("linker begin\n", DEBUG, true);
-    char *linkDestination = mallocw(sizeof(char)*(strlen(linker_destination)+strlen(filename)+10));
+    char *linkDestination = mallocw(sizeof(char) * (strlen(linker_destination) + strlen(filename) + 10));
     strcpy(linkDestination, linker_destination);
     strcat(linkDestination, "/");
     strcat(linkDestination, filename);
@@ -67,21 +67,21 @@ void zelda(const char *linkSource, const char *filename){
     bool open = true;
     size_t length = strlen(linkDestination);
     int valueExist;
-    do{
-        valueExist = exist(linkSource,linkDestination);
-        if(valueExist == SYMLINK_EXIST) {
+    do {
+        valueExist = exist(linkSource, linkDestination);
+        if (valueExist == SYMLINK_EXIST) {
             i++;
             sprintf(&linkDestination[length], "%d", i);
             logger("name occuped try %s\n", DEBUG, true, linkDestination);
-        }else if(valueExist == SYMLINK_NO_EXIST){
+        } else if (valueExist == SYMLINK_NO_EXIST) {
             open = false;
             logger("name %s is ok\n", DEBUG, true, linkDestination);
-        }else{
+        } else {
             logger("file is already linked\n", DEBUG, true);
             logger("linker end\n", DEBUG, true);
             return;
         }
-    }while(open);
+    } while (open);
 
     logger("link source %s link destination %s\n", DEBUG, true, linkSource, linkDestination);
 

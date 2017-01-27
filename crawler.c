@@ -42,7 +42,7 @@ FTW_SLN fpath  is a symbolic link pointing to a nonexistent file.  (This occurs 
  */
 static int display_info(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf) {
     //is a file
-    if(tflag == FTW_F){
+    if (tflag == FTW_F) {
         logger("crawler found file %s\n", DEBUG, true, fpath);
         filter(fpath, sb, ftwbuf);
     }

@@ -31,6 +31,8 @@
 /**
  * link of the smartfolder
  */
-char* linker_destination;
-void zelda(const char *linkSource, const char *filename);
+char *linker_destination;
+
+extern void zelda(const char *linkSource, const char *filename);
+
 #endif //SEARCHFOLDER_LINKER_H

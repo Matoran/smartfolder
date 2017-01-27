@@ -7,12 +7,11 @@
  *
  * Wrap every syscall that can fail, in general call perror and exit on error
  */
-
+#include <ftw.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <signal.h>
-#include <ftw.h>
 #include <string.h>
 #include "wrappersyscall.h"
 

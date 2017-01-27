@@ -30,11 +30,11 @@
  * @param fpath path of the file
  * @return bool if name is valid
  */
-bool checkName(int pos, const char *fpath){
-    nameS *condition = ((nameS*)filterConditions[pos]);
-    if(condition->exactName){
+bool checkName(int pos, const char *fpath) {
+    nameS *condition = ((nameS *) filterConditions[pos]);
+    if (condition->exactName) {
         return strcmp(condition->string, fpath) == 0;
-    }else{
+    } else {
         return strstr(fpath, condition->string) != NULL;
     }
 }
@@ -45,9 +45,9 @@ bool checkName(int pos, const char *fpath){
  * @param size size of file
  * @return bool if size is valid
  */
-bool checkSize(int pos, off_t size){
-    sizeS *condition = ((sizeS*)filterConditions[pos]);
-    switch (condition->symbol){
+bool checkSize(int pos, off_t size) {
+    sizeS *condition = ((sizeS *) filterConditions[pos]);
+    switch (condition->symbol) {
         case PLUS:
             return size > condition->number;
         case MINUS:
@@ -67,10 +67,10 @@ bool checkSize(int pos, off_t size){
  * @param sb is the stat of file
  * @return bool if date is valid
  */
-bool checkDate(int pos, const struct stat *sb){
-    dateS *condition = ((dateS*)filterConditions[pos]);
+bool checkDate(int pos, const struct stat *sb) {
+    dateS *condition = ((dateS *) filterConditions[pos]);
     time_t time;
-    switch (condition->type){
+    switch (condition->type) {
         case STATUS:
             time = sb->st_ctime;
             break;
@@ -85,7 +85,7 @@ bool checkDate(int pos, const struct stat *sb){
             exit(1);
     }
 
-    switch (condition->symbol){
+    switch (condition->symbol) {
         case PLUS:
             logger("time %d > condition %d\n", DEBUG, true, time, condition->timestamp + ONE_DAY);
             return time >= condition->timestamp + ONE_DAY;
@@ -108,9 +108,9 @@ bool checkDate(int pos, const struct stat *sb){
  * @param sb is the stat of file
  * @return bool if group or user is valid
  */
-bool checkOwner(int pos, const struct stat *sb){
-    ownerS *condition = ((ownerS*)filterConditions[pos]);
-    switch (condition->type){
+bool checkOwner(int pos, const struct stat *sb) {
+    ownerS *condition = ((ownerS *) filterConditions[pos]);
+    switch (condition->type) {
         case GROUP:
             return condition->number == sb->st_gid;
         case USER:
@@ -127,10 +127,10 @@ bool checkOwner(int pos, const struct stat *sb){
  * @param sb is the stat of file
  * @return bool if permission is valid
  */
-bool checkPerm(int pos, const struct stat *sb){
-    permS *condition = ((permS*)filterConditions[pos]);
+bool checkPerm(int pos, const struct stat *sb) {
+    permS *condition = ((permS *) filterConditions[pos]);
     unsigned int perms = sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
-    switch (condition->symbol){
+    switch (condition->symbol) {
         case PLUS:
             return perms >= condition->number;
         case MINUS:
@@ -146,7 +146,7 @@ bool checkPerm(int pos, const struct stat *sb){
 /**
  * Initialize the global variable: filterConditions.
  */
-void initFilter(){
+void initFilter() {
     filterConditions = NULL;
 }
 
@@ -158,7 +158,7 @@ void initFilter(){
  * @param tflag flag of the file
  * @param ftwbuf
  */
-void filter(const char *fpath, const struct stat *sb, struct FTW *ftwbuf){
+void filter(const char *fpath, const struct stat *sb, struct FTW *ftwbuf) {
     logger("filter begin\n", DEBUG, true);
     stackBoolS *stack = NULL;
     int j = 0;
@@ -166,7 +166,7 @@ void filter(const char *fpath, const struct stat *sb, struct FTW *ftwbuf){
     for (int i = 0; i < size; ++i) {
         logger("%d ", DEBUG, false, expressionFilter[i]);
         logger(" j=%d", DEBUG, false, j);
-        switch (expressionFilter[i]){
+        switch (expressionFilter[i]) {
             case NOT:
                 pushBool(&stack, !popBool(&stack));
                 logger("(NOT) ", DEBUG, false);
@@ -209,7 +209,7 @@ void filter(const char *fpath, const struct stat *sb, struct FTW *ftwbuf){
         }
         displayStackBool(stack);
     }
-    if(size == 0 || popBool(&stack)){
+    if (size == 0 || popBool(&stack)) {
         logger("file valid add link\n", DEBUG, true);
         zelda(fpath, fpath + ftwbuf->base);
     }

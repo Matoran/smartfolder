@@ -16,25 +16,33 @@
 /**
  * Simple stack that can contain ints
  */
-typedef struct stackIntS{
+typedef struct stackIntS {
     int value;
     struct stackIntS *next;
-}stackIntS;
+} stackIntS;
+
 extern void pushInt(stackIntS **stack, int value);
+
 extern int popInt(stackIntS **stack);
+
 extern bool isEmptyInt(stackIntS *stack);
+
 extern int headInt(stackIntS **stack);
 
 /**
  * Simple stack that can contain bools
  */
-typedef struct stackBoolS{
+typedef struct stackBoolS {
     bool value;
     struct stackBoolS *next;
-}stackBoolS;
+} stackBoolS;
+
 extern void pushBool(stackBoolS **stack, bool value);
+
 extern bool popBool(stackBoolS **stack);
+
 extern bool isEmptyBool(stackBoolS *stack);
+
 extern void displayStackBool(stackBoolS *stack);
 
 #endif //SEARCHFOLDER_STACK_H

@@ -127,7 +127,7 @@ void checkFiles(const char *path) {
             }
             if (stillAlive(namelist[n]->d_name)) {
                 unlinkw(namelist[n]->d_name);
-                if (distance == 1){
+                if (distance == 1) {
                     rename(namelist[first]->d_name, namelist[n]->d_name);
                     first--;
                 }

@@ -11,6 +11,7 @@
 #ifndef SEARCHFOLDER_WRAPPERSYSCALL_H
 #define SEARCHFOLDER_WRAPPERSYSCALL_H
 
+#include <ftw.h>
 #include <zconf.h>
 #include <sys/stat.h>
 #include <unistd.h>
