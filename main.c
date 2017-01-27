@@ -43,7 +43,10 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
         logger("kill smartfolder with name: %s\n", DEBUG, true, argv[2]);
-        pid_t pid = readPID(argv[2]);
+        pid_t pid = readPID(argv[2], true);
+        if(pid == -1){
+            exit(EXIT_FAILURE);
+        }
         logger("pid read: %d\n", DEBUG, true, pid);
         //read file
         killw(pid, SIGKILL);
@@ -55,6 +58,10 @@ int main(int argc, char *argv[]) {
         if (argc < 3) {
             printf("usage: smartfolder dir_name search_path [expression]\n");
             exit(2);
+        }
+        if(readPID(argv[1], false) != -1){
+            printf("smartfolder with this name already exist\n");
+            exit(EXIT_FAILURE);
         }
         logger("smartfolder number of params ok\n", DEBUG, true);
         parser(argc, argv);

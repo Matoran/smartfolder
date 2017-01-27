@@ -32,6 +32,7 @@ void pushInt(stackIntS **stack, int value){
 int popInt(stackIntS **stack){
     if(isEmptyInt(*stack)){
         logger("stack error: empty stack and pop\n", ERROR, true);
+        exit(EXIT_FAILURE);
     }else{
         int nb = (*stack)->value;
         stackIntS *temp = *stack;
@@ -49,6 +50,7 @@ int popInt(stackIntS **stack){
 int headInt(stackIntS **stack){
     if(isEmptyInt(*stack)){
         logger("stack error: empty stack and pop\n", ERROR, true);
+        exit(EXIT_FAILURE);
     }else{
         return (*stack)->value;
     }
@@ -83,6 +85,7 @@ void pushBool(stackBoolS **stack, bool value){
 bool popBool(stackBoolS **stack){
     if(isEmptyBool(*stack)){
         logger("stack error: empty stack and pop\n", ERROR, true);
+        exit(EXIT_FAILURE);
     }else{
         bool boolean = (*stack)->value;
         stackBoolS *temp = *stack;

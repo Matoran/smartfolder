@@ -51,7 +51,7 @@ int getInt(const char *string) {
     if (i > 0) {
         return atoi(&string[length - i]);
     } else {
-        return -1;
+        return 0;
     }
 }
 
@@ -118,7 +118,7 @@ void checkFiles(const char *path) {
                 int a = getInt(namelist[n]->d_name);
                 int b = getInt(namelist[n - 1]->d_name);
                 distance = abs(a - b);
-                if ((a == 1 && b == -1) || (b == 1 && a == -1)) {
+                if ((a == 1 && b == 0) || (b == 1 && a == 0)) {
                     distance = 1;
                 }
                 if (distance > 1) {

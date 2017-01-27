@@ -19,7 +19,6 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <stdarg.h>
-#include <libgen.h>
 #include <stdbool.h>
 
 /**
@@ -79,21 +78,22 @@ void savePID(const char *name, pid_t pid){
  * @param name the name of the smartfolder
  * @return pid_t the pid
  */
-pid_t readPID(const char *name){
+pid_t readPID(const char *name, bool delete){
     char *fullName = mallocw(sizeof(char) * (strlen(name) + strlen("/tmp/smartfolder/") + 1));
     strcpy(fullName, "/tmp/smartfolder/");
-    strcat(fullName, name);
+    strcat(fullName, basename(name));
     FILE *fp;
     fp = fopen(fullName, "r");
     if(fp != NULL){
         pid_t value = -1;
         fscanf(fp, "%d", &value);
         fclose(fp);
-        remove(fullName);
+        if(delete)
+            remove(fullName);
         return value;
     }else{
         logger("cannot open filename: %s, smartfolder %s doesn't exist\n", ERROR, true, fullName, name);
-        exit(3);
+        return -1;
     }
 }
 

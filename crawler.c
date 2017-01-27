@@ -44,7 +44,7 @@ static int display_info(const char *fpath, const struct stat *sb, int tflag, str
     //is a file
     if(tflag == FTW_F){
         logger("crawler found file %s\n", DEBUG, true, fpath);
-        filter(fpath, sb, tflag, ftwbuf);
+        filter(fpath, sb, ftwbuf);
     }
     return 0;           /* To tell nftw() to continue */
 }

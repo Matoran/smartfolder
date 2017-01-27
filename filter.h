@@ -78,7 +78,7 @@ typedef struct dateS{
  */
 typedef struct ownerS{
     int type;
-    int number;
+    unsigned int number;
 }ownerS;
 
 /**
@@ -88,7 +88,7 @@ typedef struct ownerS{
  */
 typedef struct permS{
     int symbol;
-    int number;
+    unsigned int number;
 }permS;
 
 /**
@@ -116,6 +116,6 @@ int *expressionFilter;
 int size;
 
 void initFilter();
-void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf);
+void filter(const char *fpath, const struct stat *sb, struct FTW *ftwbuf);
 
 #endif //SEARCHFOLDER_FILTER_H

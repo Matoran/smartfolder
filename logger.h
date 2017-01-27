@@ -30,14 +30,13 @@
 /**
  * level
  */
-#define LEVEL (LOG | ERROR)
 #define LEVEL (LOG | DEBUG | ERROR)
 
 extern void logger(const char *format, int type, bool begin, ...);
 
 extern void savePID(const char *name, pid_t pid);
 
-extern pid_t readPID(const char *name);
+extern pid_t readPID(const char *name, bool delete);
 
 extern void savePath(const char *name, const char *realpath);
 

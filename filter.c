@@ -129,7 +129,7 @@ bool checkOwner(int pos, const struct stat *sb){
  */
 bool checkPerm(int pos, const struct stat *sb){
     permS *condition = ((permS*)filterConditions[pos]);
-    int perms = sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
+    unsigned int perms = sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
     switch (condition->symbol){
         case PLUS:
             return perms >= condition->number;
@@ -158,7 +158,7 @@ void initFilter(){
  * @param tflag flag of the file
  * @param ftwbuf
  */
-void filter(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf){
+void filter(const char *fpath, const struct stat *sb, struct FTW *ftwbuf){
     logger("filter begin\n", DEBUG, true);
     stackBoolS *stack = NULL;
     int j = 0;
